@@ -38,93 +38,126 @@ class Button_Stagger extends Widget_Base {
 
     protected function register_controls() {
 
-        /* ----------- SEZIONE CONTENUTO ----------- */
-        $this->start_controls_section( 'content_section', [
-            'label' => 'Contenuto',
-            'tab' => Controls_Manager::TAB_CONTENT,
-        ]);
+    /* ----------- SEZIONE CONTENUTO ----------- */
+    $this->start_controls_section( 'content_section', [
+        'label' => 'Contenuto',
+        'tab' => Controls_Manager::TAB_CONTENT,
+    ]);
 
-        $this->add_control( 'text', [
-            'label' => 'Testo',
-            'type' => Controls_Manager::TEXT,
-            'default' => 'Staggering Button',
-        ]);
+    $this->add_control( 'text', [
+        'label' => 'Testo',
+        'type' => Controls_Manager::TEXT,
+        'default' => 'Staggering Button',
+    ]);
 
-        $this->add_control( 'link', [
-            'label' => 'Link',
-            'type' => Controls_Manager::URL,
-            'default' => [ 'url' => '#' ],
-        ]);
+    $this->add_control( 'link', [
+        'label' => 'Link',
+        'type' => Controls_Manager::URL,
+        'default' => [ 'url' => '#' ],
+    ]);
 
-        $this->end_controls_section();
+    $this->end_controls_section();
 
 
-        /* ----------- SEZIONE STILE ----------- */
-        $this->start_controls_section( 'style_section', [
-            'label' => 'Stile',
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
+    /* ----------- SEZIONE STILE ----------- */
+    $this->start_controls_section( 'style_section', [
+        'label' => 'Stile',
+        'tab' => Controls_Manager::TAB_STYLE,
+    ]);
 
-        // tipografia
-        $this->add_group_control( Group_Control_Typography::get_type(), [
-            'name' => 'typography',
-            'selector' => '{{WRAPPER}} .btn-animate-chars__text',
-        ]);
+    // TIPOGRAFIA
+    $this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+        'name' => 'typography',
+        'selector' => '{{WRAPPER}} .btn-animate-chars__text',
+    ]);
 
-        // colore del testo
-        $this->add_control( 'text_color', [
-            'label' => 'Colore testo',
-            'type' => Controls_Manager::COLOR,
-            'selectors' => [ '{{WRAPPER}} .btn-animate-chars' => 'color: {{VALUE}};' ],
-            'default' => '#131313',
-        ]);
+    // STATI NORMALE / HOVER
+    $this->start_controls_tabs( 'tabs_button_style' );
 
-        // colore di sfondo
-        $this->add_group_control( Group_Control_Background::get_type(), [
-            'name' => 'background',
-            'label' => 'Sfondo',
-            'types' => [ 'classic', 'gradient' ],
-            'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
-        ]);
+    // ---- Stato Normale ----
+    $this->start_controls_tab( 'tab_button_normal', [ 'label' => 'Normale' ] );
 
-        // padding
-        $this->add_responsive_control( 'padding', [
-            'label' => 'Padding',
-            'type' => Controls_Manager::DIMENSIONS,
-            'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars' =>
-                    'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
-            'default' => [
-                'top' => 1,
-                'right' => 1,
-                'bottom' => 1,
-                'left' => 1,
-                'unit' => 'em',
-            ],
-        ]);
+    $this->add_control( 'text_color', [
+        'label' => 'Colore testo',
+        'type' => Controls_Manager::COLOR,
+        'selectors' => [ '{{WRAPPER}} .btn-animate-chars' => 'color: {{VALUE}};' ],
+    ]);
 
-        // border radius
-        $this->add_control( 'border_radius', [
-            'label' => 'Raggio bordo',
-            'type' => Controls_Manager::SLIDER,
-            'range' => [ 'px' => [ 'min' => 0, 'max' => 50 ] ],
-            'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars, {{WRAPPER}} .btn-animate-chars__bg' =>
-                    'border-radius: {{SIZE}}px;',
-            ],
-            'default' => [ 'size' => 4 ],
-        ]);
+    $this->add_control( 'bg_color', [
+        'label' => 'Colore sfondo',
+        'type' => Controls_Manager::COLOR,
+        'selectors' => [ '{{WRAPPER}} .btn-animate-chars__bg' => 'background-color: {{VALUE}};' ],
+    ]);
 
-        // ombra opzionale
-        $this->add_group_control( Group_Control_Box_Shadow::get_type(), [
-            'name' => 'box_shadow',
-            'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
-        ]);
+    $this->end_controls_tab();
 
-        $this->end_controls_section();
-    }
+    // ---- Stato Hover ----
+    $this->start_controls_tab( 'tab_button_hover', [ 'label' => 'Hover' ] );
 
+    $this->add_control( 'hover_text_color', [
+        'label' => 'Colore testo (hover)',
+        'type' => Controls_Manager::COLOR,
+        'selectors' => [ '{{WRAPPER}} .btn-animate-chars:hover' => 'color: {{VALUE}};' ],
+    ]);
+
+    $this->add_control( 'hover_bg_color', [
+        'label' => 'Colore sfondo (hover)',
+        'type' => Controls_Manager::COLOR,
+        'selectors' => [ '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};' ],
+    ]);
+
+    $this->add_control( 'animation_duration', [
+        'label' => 'Durata animazione (s)',
+        'type' => Controls_Manager::NUMBER,
+        'min' => 0.1,
+        'max' => 5,
+        'step' => 0.1,
+        'default' => 0.6,
+        'selectors' => [
+            '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span, {{WRAPPER}} .btn-animate-chars__bg' =>
+                'transition-duration: {{VALUE}}s;',
+        ],
+    ]);
+
+    $this->end_controls_tab();
+    $this->end_controls_tabs();
+
+    // PADDING
+    $this->add_responsive_control( 'padding', [
+        'label' => 'Padding',
+        'type' => Controls_Manager::DIMENSIONS,
+        'size_units' => [ 'px', 'em', 'rem', '%' ],
+        'selectors' => [
+            '{{WRAPPER}} .btn-animate-chars' =>
+                'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+    ]);
+
+    // BORDER (stile + colore + spessore)
+    $this->add_group_control( \Elementor\Group_Control_Border::get_type(), [
+        'name' => 'border',
+        'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
+    ]);
+
+    // BORDER RADIUS
+    $this->add_responsive_control( 'border_radius', [
+        'label' => 'Raggio bordo',
+        'type' => Controls_Manager::DIMENSIONS,
+        'size_units' => [ 'px', '%', 'em' ],
+        'selectors' => [
+            '{{WRAPPER}} .btn-animate-chars, {{WRAPPER}} .btn-animate-chars__bg' =>
+                'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+    ]);
+
+    // OMBRA
+    $this->add_group_control( \Elementor\Group_Control_Box_Shadow::get_type(), [
+        'name' => 'box_shadow',
+        'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
+    ]);
+
+    $this->end_controls_section();
+}
     protected function render() {
         $s = $this->get_settings_for_display();
         $link = $s['link']['url'] ?? '#';
