@@ -106,6 +106,41 @@ class Button_Stagger extends Widget_Base {
             'selectors' => [ '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};' ],
         ]);
 
+        // DURATA ANIMAZIONE HOVER
+$this->add_control( 'hover_animation_duration', [
+    'label' => 'Durata animazione hover (s)',
+    'type' => Controls_Manager::SLIDER,
+    'size_units' => [ 's' ],
+    'range' => [
+        's' => [ 'min' => 0.1, 'max' => 5, 'step' => 0.1 ],
+    ],
+    'default' => [ 'size' => 0.6, 'unit' => 's' ],
+    'selectors' => [
+        '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars:hover [data-button-animate-chars] span' =>
+            'transition-duration: {{SIZE}}{{UNIT}};',
+    ],
+]);
+
+// EASING ANIMAZIONE HOVER
+$this->add_control( 'hover_animation_easing', [
+    'label' => 'Tipo easing (hover)',
+    'type' => Controls_Manager::SELECT,
+    'default' => 'ease-in-out',
+    'options' => [
+        'ease' => 'Ease',
+        'ease-in' => 'Ease In',
+        'ease-out' => 'Ease Out',
+        'ease-in-out' => 'Ease In-Out',
+        'linear' => 'Linear',
+        'cubic-bezier(0.625, 0.05, 0, 1)' => 'Custom (cubic-bezier)',
+    ],
+    'selectors' => [
+        '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars:hover [data-button-animate-chars] span' =>
+            'transition-timing-function: {{VALUE}};',
+    ],
+]);
+
+
         $this->add_control( 'animation_duration', [
             'label' => 'Durata animazione (s)',
             'type' => Controls_Manager::SLIDER,
