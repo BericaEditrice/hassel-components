@@ -9,6 +9,7 @@
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * GitHub Plugin URI: BericaEditrice/hassel-components
+ * Primary Branch: main
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
