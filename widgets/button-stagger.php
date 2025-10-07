@@ -119,20 +119,17 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
-
         // Animazione (unica per entrata/uscita) – Slider conforme doc
         $this->add_control('animation_duration', [
             'label' => __('Durata animazione (s)', 'hassel-components'),
             'type' => \Elementor\Controls_Manager::SLIDER,
             'range' => [
-                'px' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
+                's' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
             ],
-            'default' => ['unit' => 'px', 'size' => 0.6],
+            'default' => ['unit' => 's', 'size' => 0.6],
             'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}}s;',
-                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}}s;',
+                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}};',
+                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}};',
             ],
         ]);
 
@@ -153,6 +150,9 @@ class Button_Stagger extends Widget_Base
                 '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-timing-function: {{VALUE}};',
             ],
         ]);
+
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
 
         // Padding
         $this->add_responsive_control('padding', [
