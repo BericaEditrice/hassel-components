@@ -1,27 +1,43 @@
-function initButtonCharacterStagger() {
-  const offsetIncrement = 0.01; // Transition offset increment in seconds
-  const buttons = document.querySelectorAll("[data-button-animate-chars]");
+(function () {
+  function initButtonCharacterStagger($scope) {
+    const roots = ($scope ? $scope[0] : document).querySelectorAll(
+      "[data-button-animate-chars]"
+    );
+    const offsetIncrement = 0.01;
 
-  buttons.forEach((button) => {
-    const text = button.textContent; // Get the button's text content
-    button.innerHTML = ""; // Clear the original content
+    roots.forEach((root) => {
+      // evita di reiniettare se già segmentato
+      if (root.dataset.hasselCharsInit === "1") return;
 
-    [...text].forEach((char, index) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.style.transitionDelay = `${index * offsetIncrement}s`;
-
-      // Handle spaces explicitly
-      if (char === " ") {
-        span.style.whiteSpace = "pre"; // Preserve space width
-      }
-
-      button.appendChild(span);
+      const text = root.textContent;
+      root.innerHTML = "";
+      [...text].forEach((char, i) => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.style.transitionDelay = i * offsetIncrement + "s";
+        if (char === " ") span.style.whiteSpace = "pre";
+        root.appendChild(span);
+      });
+      root.dataset.hasselCharsInit = "1";
     });
-  });
-}
+  }
 
-// Initialize Button Character Stagger Animation
-document.addEventListener("DOMContentLoaded", () => {
-  initButtonCharacterStagger();
-});
+  // Frontend classico
+  document.addEventListener("DOMContentLoaded", function () {
+    initButtonCharacterStagger();
+  });
+
+  // Editor Elementor: re-init ad ogni render del widget
+  window.addEventListener("elementor/frontend/init", function () {
+    const handler = function ($scope) {
+      initButtonCharacterStagger($scope);
+    };
+    // hook generico per tutti i widget (così funziona se rinomini)
+    elementorFrontend.hooks.addAction("frontend/element_ready/widget", handler);
+    // o, se vuoi essere super-specifco sul tuo:
+    elementorFrontend.hooks.addAction(
+      "frontend/element_ready/hassel_button_stagger.default",
+      handler
+    );
+  });
+})();

@@ -35,6 +35,9 @@ Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e co
 
 == Changelog ==
 
+= 1.0.12 =
+* Correzione bug.
+
 = 1.0.11 =
 * Correzione bug.
 
