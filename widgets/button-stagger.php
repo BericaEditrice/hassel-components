@@ -107,19 +107,18 @@ class Button_Stagger extends Widget_Base {
         ]);
 
         // ANIMAZIONE (durata + easing unificati)
-        $this->add_control( 'animation_duration', [
-            'label' => 'Durata animazione (s)',
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => [ 's' ],
-            'range' => [
-                's' => [ 'min' => 0.1, 'max' => 5, 'step' => 0.1 ],
-            ],
-            'default' => [ 'size' => 0.6, 'unit' => 's' ],
-            'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' =>
-                    'transition-duration: {{SIZE}}{{UNIT}};',
-            ],
-        ]);
+$this->add_control( 'animation_duration', [
+    'label' => 'Durata animazione (s)',
+    'type' => Controls_Manager::SLIDER,
+    'range' => [
+        'px' => [ 'min' => 0.1, 'max' => 5, 'step' => 0.1 ],
+    ],
+    'default' => [ 'size' => 0.6 ],
+    'selectors' => [
+        '{{WRAPPER}} .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' =>
+            'transition-duration: {{SIZE}}s;',
+    ],
+]);
 
         $this->add_control( 'animation_easing', [
             'label' => 'Tipo di animazione',
