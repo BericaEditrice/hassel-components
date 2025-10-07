@@ -115,20 +115,26 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        // ANIMAZIONE (durata + easing unificati)
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+
+        // --- DURATA ANIMAZIONE (slider visibile) ---
         $this->add_control('animation_duration', [
             'label' => 'Durata animazione (s)',
-            'type' => Controls_Manager::NUMBER,
-            'min' => 0.1,
-            'max' => 5,
-            'step' => 0.1,
-            'default' => 0.6,
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px'], // solo per abilitare lo slider
+            'range' => [
+                'px' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
+            ],
+            'default' => ['size' => 0.6, 'unit' => 'px'],
             'selectors' => [
                 '{{WRAPPER}} .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' =>
-                    'transition-duration: {{VALUE}}s;',
+                    'transition-duration: {{SIZE}}s;',
             ],
         ]);
 
+        // --- EASING ---
         $this->add_control('animation_easing', [
             'label' => 'Tipo di animazione',
             'type' => Controls_Manager::SELECT,
@@ -147,10 +153,8 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
 
-        // PADDING
+        // --- PADDING ---
         $this->add_responsive_control('padding', [
             'label' => 'Padding',
             'type' => Controls_Manager::DIMENSIONS,
@@ -161,13 +165,13 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // BORDER (stile + colore + spessore)
+        // --- BORDER ---
         $this->add_group_control(Group_Control_Border::get_type(), [
             'name' => 'border',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
         ]);
 
-        // BORDER RADIUS
+        // --- BORDER RADIUS ---
         $this->add_responsive_control('border_radius', [
             'label' => 'Raggio bordo',
             'type' => Controls_Manager::DIMENSIONS,
@@ -178,7 +182,7 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // OMBRA
+        // --- OMBRA ---
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
             'name' => 'box_shadow',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',

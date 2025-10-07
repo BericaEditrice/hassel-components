@@ -5,7 +5,7 @@ Tags: elementor, widgets, design, animation, hassel
 Requires at least: 6.0
 Tested up to: 6.8.3
 Requires PHP: 8.0
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,9 @@ Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e co
 
 == Changelog ==
 
+= 1.0.9 =
+* Correzione bug.
+
 = 1.0.8 =
 * Correzione bug.
 
@@ -54,9 +57,9 @@ Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e co
 * Correzione bug
 
 = 1.0.2 =
-* - Aggiunto readme.txt per schermata plugin
-  - Migliorata compatibilità con GitHub Updater
-  - Aggiunti controlli avanzati al Button Stagger
+* Aggiunto readme.txt per schermata plugin
+* Migliorata compatibilità con GitHub Updater
+* Aggiunti controlli avanzati al Button Stagger
 
 = 1.0.1 =
 * Aggiunto il primo widget Button Stagger con CSS e animazioni.
