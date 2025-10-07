@@ -83,7 +83,7 @@ class Button_Stagger extends Widget_Base
         // STATI NORMALE / HOVER
         $this->start_controls_tabs('tabs_button_style');
 
-        // ---- Stato Normale ----
+        // ---- Normale ----
         $this->start_controls_tab('tab_button_normal', ['label' => 'Normale']);
 
         $this->add_control('text_color', [
@@ -100,7 +100,7 @@ class Button_Stagger extends Widget_Base
 
         $this->end_controls_tab();
 
-        // ---- Stato Hover ----
+        // ---- Hover ----
         $this->start_controls_tab('tab_button_hover', ['label' => 'Hover']);
 
         $this->add_control('hover_text_color', [
@@ -115,26 +115,22 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
-
-
-        // --- DURATA ANIMAZIONE (slider visibile) ---
+        // ✅ Unico set ANIMAZIONE (compare qui ma vale per entrata+uscita)
         $this->add_control('animation_duration', [
             'label' => 'Durata animazione (s)',
             'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px'], // solo per abilitare lo slider
+            'size_units' => ['px'], // serve solo per rendere visibile lo slider
             'range' => [
                 'px' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
             ],
             'default' => ['size' => 0.6, 'unit' => 'px'],
             'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' =>
-                    'transition-duration: {{SIZE}}s;',
+                // Applicato agli elementi nello stato base così funziona sia in hover-in che in hover-out
+                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}}s;',
+                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}}s;',
             ],
         ]);
 
-        // --- EASING ---
         $this->add_control('animation_easing', [
             'label' => 'Tipo di animazione',
             'type' => Controls_Manager::SELECT,
@@ -148,13 +144,15 @@ class Button_Stagger extends Widget_Base
                 'cubic-bezier(0.625, 0.05, 0, 1)' => 'Custom (cubic-bezier)',
             ],
             'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' =>
-                    'transition-timing-function: {{VALUE}};',
+                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-timing-function: {{VALUE}};',
+                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-timing-function: {{VALUE}};',
             ],
         ]);
 
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
 
-        // --- PADDING ---
+        // PADDING
         $this->add_responsive_control('padding', [
             'label' => 'Padding',
             'type' => Controls_Manager::DIMENSIONS,
@@ -165,13 +163,13 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // --- BORDER ---
+        // BORDER
         $this->add_group_control(Group_Control_Border::get_type(), [
             'name' => 'border',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
         ]);
 
-        // --- BORDER RADIUS ---
+        // BORDER RADIUS
         $this->add_responsive_control('border_radius', [
             'label' => 'Raggio bordo',
             'type' => Controls_Manager::DIMENSIONS,
@@ -182,7 +180,7 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // --- OMBRA ---
+        // OMBRA
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
             'name' => 'box_shadow',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
@@ -195,8 +193,8 @@ class Button_Stagger extends Widget_Base
     {
         $s = $this->get_settings_for_display();
         $link = $s['link']['url'] ?? '#';
-        $target = $s['link']['is_external'] ? ' target="_blank"' : '';
-        $rel = $s['link']['nofollow'] ? ' rel="nofollow"' : '';
+        $target = !empty($s['link']['is_external']) ? ' target="_blank"' : '';
+        $rel = !empty($s['link']['nofollow']) ? ' rel="nofollow"' : '';
 
         echo '<a href="' . esc_url($link) . '" aria-label="' . esc_attr($s['text']) . '" class="btn-animate-chars"' . $target . $rel . '>';
         echo '  <div class="btn-animate-chars__bg"></div>';
