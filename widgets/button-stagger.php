@@ -83,7 +83,7 @@ class Button_Stagger extends Widget_Base
         // STATI NORMALE / HOVER
         $this->start_controls_tabs('tabs_button_style');
 
-        // ---- Normale ----
+        // ---- Stato Normale ----
         $this->start_controls_tab('tab_button_normal', ['label' => 'Normale']);
 
         $this->add_control('text_color', [
@@ -100,7 +100,7 @@ class Button_Stagger extends Widget_Base
 
         $this->end_controls_tab();
 
-        // ---- Hover ----
+        // ---- Stato Hover ----
         $this->start_controls_tab('tab_button_hover', ['label' => 'Hover']);
 
         $this->add_control('hover_text_color', [
@@ -115,19 +115,17 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        // ✅ Unico set ANIMAZIONE (compare qui ma vale per entrata+uscita)
         $this->add_control('animation_duration', [
             'label' => 'Durata animazione (s)',
             'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px'], // serve solo per rendere visibile lo slider
+            'size_units' => ['s'],
             'range' => [
-                'px' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
+                's' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
             ],
-            'default' => ['size' => 0.6, 'unit' => 'px'],
+            'default' => ['size' => 0.6, 'unit' => 's'],
             'selectors' => [
-                // Applicato agli elementi nello stato base così funziona sia in hover-in che in hover-out
-                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}}s;',
-                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}}s;',
+                '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars:hover [data-button-animate-chars] span' =>
+                    'transition-duration: {{SIZE}}{{UNIT}};',
             ],
         ]);
 
@@ -144,8 +142,8 @@ class Button_Stagger extends Widget_Base
                 'cubic-bezier(0.625, 0.05, 0, 1)' => 'Custom (cubic-bezier)',
             ],
             'selectors' => [
-                '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-timing-function: {{VALUE}};',
-                '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-timing-function: {{VALUE}};',
+                '{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg, {{WRAPPER}} .btn-animate-chars:hover [data-button-animate-chars] span' =>
+                    'transition-duration: {{SIZE}}{{UNIT}};',
             ],
         ]);
 
@@ -163,7 +161,7 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // BORDER
+        // BORDER (stile + colore + spessore)
         $this->add_group_control(Group_Control_Border::get_type(), [
             'name' => 'border',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
@@ -193,8 +191,8 @@ class Button_Stagger extends Widget_Base
     {
         $s = $this->get_settings_for_display();
         $link = $s['link']['url'] ?? '#';
-        $target = !empty($s['link']['is_external']) ? ' target="_blank"' : '';
-        $rel = !empty($s['link']['nofollow']) ? ' rel="nofollow"' : '';
+        $target = $s['link']['is_external'] ? ' target="_blank"' : '';
+        $rel = $s['link']['nofollow'] ? ' rel="nofollow"' : '';
 
         echo '<a href="' . esc_url($link) . '" aria-label="' . esc_attr($s['text']) . '" class="btn-animate-chars"' . $target . $rel . '>';
         echo '  <div class="btn-animate-chars__bg"></div>';
