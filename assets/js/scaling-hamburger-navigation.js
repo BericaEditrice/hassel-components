@@ -1,4 +1,4 @@
-// FRONTEND-ONLY INIT (niente hook Elementor)
+// FRONTEND ONLY
 document.addEventListener("DOMContentLoaded", () => {
   const navs = document.querySelectorAll("[data-navigation-status]");
   if (!navs.length) return;
@@ -7,57 +7,58 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toggle menu principale
     nav.querySelectorAll('[data-navigation-toggle="toggle"]').forEach((btn) => {
       btn.addEventListener("click", () => {
-        const isActive =
-          nav.getAttribute("data-navigation-status") === "active";
+        const active = nav.getAttribute("data-navigation-status") === "active";
         nav.setAttribute(
           "data-navigation-status",
-          isActive ? "not-active" : "active"
+          active ? "not-active" : "active"
         );
       });
     });
 
     // Chiudi menu (overlay)
     nav.querySelectorAll('[data-navigation-toggle="close"]').forEach((btn) => {
-      btn.addEventListener("click", () => {
-        nav.setAttribute("data-navigation-status", "not-active");
-      });
+      btn.addEventListener("click", () =>
+        nav.setAttribute("data-navigation-status", "not-active")
+      );
     });
 
     // ESC chiude
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape")
         nav.setAttribute("data-navigation-status", "not-active");
-      }
     });
 
-    // SOTTOMENU: PRIMO CLICK APRE, SECONDO CLICK NAVIGA
+    // IMPORTANTISSIMO: niente listener sul link del genitore!
+    // Il link (testo) deve navigare. Usiamo SOLO il chevron per aprire/chiudere.
+
+    // Toggle submenu SOLO cliccando il chevron (span.nav-link__dropdown-icon)
     nav
       .querySelectorAll(
-        ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
+        ".hamburger-nav__li.menu-item-has-children .nav-link__dropdown-icon"
       )
-      .forEach((link) => {
-        link.addEventListener("click", (e) => {
-          const li = link.closest(".hamburger-nav__li");
+      .forEach((icon) => {
+        // Click col mouse
+        icon.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const li = icon.closest(".hamburger-nav__li");
           const submenu = li
             ? li.querySelector(".hamburger-nav__submenu")
             : null;
-          if (!submenu) return; // nessun submenu, comportamento normale
+          if (!submenu) return;
 
-          if (!submenu.classList.contains("is-open")) {
-            // primo click: APRI e blocca navigazione
+          submenu.classList.toggle("is-open");
+          li.classList.toggle("is-open");
+        });
+
+        // Accessibilità base: Enter/Space attivano il toggle
+        icon.setAttribute("tabindex", "0");
+        icon.setAttribute("role", "button");
+        icon.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            submenu.classList.add("is-open");
-            li.classList.add("is-open");
-          } else {
-            // submenu già aperto:
-            // - se href è “#” o vuoto => usalo come toggle (chiudi)
-            // - altrimenti lascia NAVIGARE
-            const href = (link.getAttribute("href") || "").trim();
-            if (href === "" || href === "#") {
-              e.preventDefault();
-              submenu.classList.remove("is-open");
-              li.classList.remove("is-open");
-            }
+            icon.click();
           }
         });
       });
