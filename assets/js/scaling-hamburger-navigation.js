@@ -1,20 +1,20 @@
-function initScalingHamburgerNavigation(root) {
-  const scope = root && root.querySelector ? root : document;
+function initScalingHamburgerNavigation(scope = document) {
+  const navs = scope.querySelectorAll("[data-navigation-status]");
+  if (!navs.length) return;
 
-  scope.querySelectorAll("[data-navigation-status]").forEach((nav) => {
-    // Toggle Navigation
+  navs.forEach((nav) => {
+    // Toggle menu
     nav.querySelectorAll('[data-navigation-toggle="toggle"]').forEach((btn) => {
       btn.addEventListener("click", () => {
+        const active = nav.getAttribute("data-navigation-status") === "active";
         nav.setAttribute(
           "data-navigation-status",
-          nav.getAttribute("data-navigation-status") === "active"
-            ? "not-active"
-            : "active"
+          active ? "not-active" : "active"
         );
       });
     });
 
-    // Close Navigation
+    // Close on overlay
     nav.querySelectorAll('[data-navigation-toggle="close"]').forEach((btn) => {
       btn.addEventListener("click", () =>
         nav.setAttribute("data-navigation-status", "not-active")
@@ -27,7 +27,7 @@ function initScalingHamburgerNavigation(root) {
         nav.setAttribute("data-navigation-status", "not-active");
     });
 
-    // Submenu toggle (previene la navigazione del genitore)
+    // Submenu toggle (click only on parents)
     nav
       .querySelectorAll(
         ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
@@ -38,27 +38,31 @@ function initScalingHamburgerNavigation(root) {
           const submenu = li.querySelector(".hamburger-nav__submenu");
           if (submenu) {
             e.preventDefault();
-            const opened = submenu.classList.contains("is-open");
-            submenu.classList.toggle("is-open", !opened);
-            li.classList.toggle("is-open", !opened);
+            submenu.classList.toggle("is-open");
+            li.classList.toggle("is-open");
           }
         });
       });
   });
 }
 
-/* Frontend init */
-window.addEventListener("load", () => initScalingHamburgerNavigation(document));
+// Run on DOM ready (frontend)
+document.addEventListener("DOMContentLoaded", () => {
+  initScalingHamburgerNavigation(document);
 
-/* Elementor editor init */
+  // Observer fallback (es. markup dinamico o lazy load)
+  const observer = new MutationObserver(() => {
+    initScalingHamburgerNavigation(document);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+
+// Elementor editor hook
 window.addEventListener("elementor/frontend/init", () => {
-  if (typeof elementorFrontend !== "undefined") {
-    elementorFrontend.hooks.addAction(
-      "frontend/element_ready/hassel_scaling_hamburger_navigation.default",
-      ($scope) => {
-        const el = $scope && $scope[0] ? $scope[0] : $scope;
-        if (el) initScalingHamburgerNavigation(el);
-      }
-    );
-  }
+  elementorFrontend.hooks.addAction(
+    "frontend/element_ready/hassel_scaling_hamburger_navigation.default",
+    ($scope) => {
+      initScalingHamburgerNavigation($scope[0]);
+    }
+  );
 });

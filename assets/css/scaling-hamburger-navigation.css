@@ -59,6 +59,8 @@
   opacity: 0;
   visibility: hidden;
   padding: 2em;
+  min-width: var(--menu-min-width, auto);
+  min-height: var(--menu-min-height, auto);
 }
 
 [data-navigation-status="active"] .hamburger-nav__group {
@@ -74,6 +76,7 @@
   text-transform: uppercase;
   margin: 0 0 0.5em 0;
   font-size: 1em;
+  color: var(--menu-title-color, inherit);
 }
 
 /* lista principale */
@@ -86,6 +89,7 @@
   position: relative;
 }
 
+/* elemento singolo */
 .hamburger-nav__li {
   list-style: none;
   margin: 0;
@@ -95,7 +99,7 @@
 
 /* link */
 .hamburger-nav__a {
-  color: #131313;
+  color: var(--menu-color, #131313);
   justify-content: space-between;
   align-items: center;
   text-decoration: none;
@@ -104,14 +108,14 @@
 }
 
 .hamburger-nav__a:hover {
-  color: #444;
+  color: var(--menu-hover-color, #444);
 }
 
 /* stato attivo */
 .hamburger-nav__a[aria-current],
 .hamburger-nav__li.current-menu-item > .hamburger-nav__a,
 .hamburger-nav__li.current_page_item > .hamburger-nav__a {
-  color: #0a0; /* sovrascritto da Elementor se impostato */
+  color: var(--menu-active-color, #0a0);
 }
 
 /* testo link */
@@ -122,17 +126,19 @@
   font-size: 2em;
 }
 
-/* dot (solo foglie) */
+/* === DOT (solo leaf items) === */
 .hamburger-nav__dot {
   transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
-  background-color: currentColor;
+  background-color: var(--dot-color, currentColor);
   border-radius: 50%;
   flex-shrink: 0;
-  width: 0.5em;
-  height: 0.5em;
+  width: var(--dot-size, 0.5em);
+  height: var(--dot-size, 0.5em);
   transform: scale(0) rotate(0.001deg);
   opacity: 0.5;
 }
+
+/* Hover e stato attivo */
 .hamburger-nav__a:hover .hamburger-nav__dot {
   transform: scale(1) rotate(0.001deg);
   opacity: 0.25;
@@ -143,14 +149,19 @@
   opacity: 1;
 }
 
-/* nascondi dot sui genitori con submenu */
+/* Nascondi dot nei genitori */
 .hamburger-nav__li.menu-item-has-children
   > .hamburger-nav__a
   .hamburger-nav__dot {
   display: none;
 }
 
-/* submenu */
+/* Dot disattivato */
+.elementor-element[data-settings*='"dot_show":"no"'] .hamburger-nav__dot {
+  display: none !important;
+}
+
+/* === SUBMENU === */
 .hamburger-nav__submenu {
   display: flex;
   flex-direction: column;
@@ -159,9 +170,10 @@
   overflow: hidden;
   opacity: 0;
   transition: all 0.4s ease;
-  padding-left: 1em; /* sovrascrivibile da Elementor */
+  padding-left: var(--submenu-indent, 1em);
   margin: 0.25em 0 0 0;
 }
+
 .hamburger-nav__submenu.is-open {
   max-height: 600px;
   opacity: 1;
@@ -175,8 +187,11 @@
 /* chevron */
 .nav-link__dropdown-icon {
   transition: transform 0.4s ease;
-  width: 1.25em;
+  width: var(--chevron-size, 1.25em);
   flex-shrink: 0;
+}
+.nav-link__dropdown-icon path {
+  stroke: var(--chevron-color, currentColor);
 }
 .hamburger-nav__li.menu-item-has-children.is-open
   > .hamburger-nav__a
@@ -184,7 +199,7 @@
   transform: rotate(180deg);
 }
 
-/* hamburger (cerchio + barre) */
+/* === HAMBURGER TOGGLE === */
 .hamburger-nav__toggle {
   transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
   pointer-events: auto;
@@ -192,40 +207,47 @@
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  width: 3.5em;
-  height: 3.5em;
+  width: var(--hamburger-size, 3.5em);
+  height: var(--hamburger-size, 3.5em);
   display: flex;
   position: absolute;
   top: 0;
   right: 0;
   transform: translate(0, 0) rotate(0.001deg);
 }
+
 [data-navigation-status="active"] .hamburger-nav__toggle {
   transform: translate(-1em, 1em) rotate(0.001deg);
 }
 
+/* barre dell'hamburger */
 .hamburger-nav__toggle-bar {
   transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
-  background-color: #131313;
+  background-color: var(--hamburger-bar-color, #131313);
   width: 40%;
-  height: 0.125em;
+  height: var(--hamburger-bar-thickness, 0.125em);
   position: absolute;
   transform: translateY(-0.15em) rotate(0.001deg);
 }
+
 .hamburger-nav__toggle:hover .hamburger-nav__toggle-bar {
   transform: translateY(0.15em) rotate(0.001deg);
 }
+
 [data-navigation-status="active"]
   .hamburger-nav__toggle
   .hamburger-nav__toggle-bar {
   transform: translateY(0) rotate(45deg);
 }
+
 .hamburger-nav__toggle .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(0.15em) rotate(0.001deg);
 }
+
 .hamburger-nav__toggle:hover .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(-0.15em) rotate(0.001deg);
 }
+
 [data-navigation-status="active"]
   .hamburger-nav__toggle
   .hamburger-nav__toggle-bar:nth-child(2) {

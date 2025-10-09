@@ -209,6 +209,70 @@ class Scaling_Hamburger_Navigation extends Widget_Base
 
         $this->end_controls_section();
 
+        /* === STILE: PALLINO (DOT) === */
+        $this->start_controls_section('dot_style', [
+            'label' => __('Indicatore Pallino', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_control('dot_show', [
+            'label' => __('Mostra pallino', 'hassel-components'),
+            'type' => Controls_Manager::SWITCHER,
+            'label_on' => __('Sì', 'hassel-components'),
+            'label_off' => __('No', 'hassel-components'),
+            'return_value' => 'yes',
+            'default' => 'yes',
+        ]);
+
+        $this->add_control('dot_color', [
+            'label' => __('Colore pallino', 'hassel-components'),
+            'type' => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav__dot' => 'background-color: {{VALUE}};',
+            ],
+            'condition' => ['dot_show' => 'yes'],
+        ]);
+
+        $this->add_responsive_control('dot_size', [
+            'label' => __('Dimensione pallino', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 2, 'max' => 30]],
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav__dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+            ],
+            'condition' => ['dot_show' => 'yes'],
+        ]);
+
+        $this->end_controls_section();
+
+        /* === STILE: CHEVRON === */
+        $this->start_controls_section('chevron_style', [
+            'label' => __('Icona Chevron', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_control('chevron_color', [
+            'label' => __('Colore icona', 'hassel-components'),
+            'type' => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon path' => 'stroke: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('chevron_size', [
+            'label' => __('Dimensione icona', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 8, 'max' => 48]],
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon' => 'width: {{SIZE}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->end_controls_section();
+
+
         /* ------------------ ICONA HAMBURGER ------------------ */
         $this->start_controls_section('hamburger_style', [
             'label' => __('Icona Hamburger', 'hassel-components'),
