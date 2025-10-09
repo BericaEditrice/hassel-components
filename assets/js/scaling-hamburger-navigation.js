@@ -1,68 +1,70 @@
-function initScalingHamburgerNavigation() {
-  const navStatusEl = document.querySelector("[data-navigation-status]");
-  if (!navStatusEl) return;
+function initScalingHamburgerNavigation(root) {
+  const scope = root && root.querySelector ? root : document;
 
-  // Toggle Menu
-  document
-    .querySelectorAll('[data-navigation-toggle="toggle"]')
-    .forEach((toggleBtn) => {
-      toggleBtn.onclick = () => {
-        const isActive =
-          navStatusEl.getAttribute("data-navigation-status") === "active";
-        navStatusEl.setAttribute(
+  scope.querySelectorAll("[data-navigation-status]").forEach((nav) => {
+    // Toggle Menu
+    nav.querySelectorAll('[data-navigation-toggle="toggle"]').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const active = nav.getAttribute("data-navigation-status") === "active";
+        nav.setAttribute(
           "data-navigation-status",
-          isActive ? "not-active" : "active"
+          active ? "not-active" : "active"
         );
-      };
-    });
-
-  // Close Menu
-  document
-    .querySelectorAll('[data-navigation-toggle="close"]')
-    .forEach((closeBtn) => {
-      closeBtn.onclick = () =>
-        navStatusEl.setAttribute("data-navigation-status", "not-active");
-    });
-
-  // ESC Key
-  document.addEventListener("keydown", (e) => {
-    if (
-      e.key === "Escape" &&
-      navStatusEl.getAttribute("data-navigation-status") === "active"
-    ) {
-      navStatusEl.setAttribute("data-navigation-status", "not-active");
-    }
-  });
-
-  // Handle Submenu Toggle
-  document
-    .querySelectorAll(
-      ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
-    )
-    .forEach((link) => {
-      let firstClick = 0;
-      link.addEventListener("click", (e) => {
-        const now = Date.now();
-        const submenu = link.nextElementSibling;
-        if (submenu && submenu.classList.contains("hamburger-nav__submenu")) {
-          if (
-            !submenu.classList.contains("is-open") ||
-            now - firstClick < 600
-          ) {
-            e.preventDefault();
-            submenu.classList.toggle("is-open");
-            firstClick = now;
-          }
-        }
       });
     });
+
+    // Close Menu
+    nav.querySelectorAll('[data-navigation-toggle="close"]').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        nav.setAttribute("data-navigation-status", "not-active");
+      });
+    });
+
+    // ESC Key
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        nav.getAttribute("data-navigation-status") === "active"
+      ) {
+        nav.setAttribute("data-navigation-status", "not-active");
+      }
+    });
+
+    // Submenu toggle: genitori con figli
+    nav
+      .querySelectorAll(
+        ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
+      )
+      .forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const submenu = link.nextElementSibling; // <ul class="hamburger-nav__submenu">
+          if (submenu && submenu.classList.contains("hamburger-nav__submenu")) {
+            if (!submenu.classList.contains("is-open")) {
+              e.preventDefault(); // primo click: apri
+              submenu.classList.add("is-open");
+            } // secondo click: submenu già aperto -> lascia navigare
+          }
+        });
+      });
+  });
 }
 
-// Init both frontend + editor
-document.addEventListener("DOMContentLoaded", initScalingHamburgerNavigation);
+// Avvio FRONTEND
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () =>
+    initScalingHamburgerNavigation(document)
+  );
+} else {
+  initScalingHamburgerNavigation(document);
+}
+
+// Avvio EDITOR Elementor (per singola istanza widget)
 window.addEventListener("elementor/frontend/init", () => {
   elementorFrontend.hooks.addAction(
     "frontend/element_ready/hassel_scaling_hamburger_navigation.default",
-    initScalingHamburgerNavigation
+    ($scope) => {
+      const el = $scope && $scope[0] ? $scope[0] : $scope;
+      if (el) initScalingHamburgerNavigation(el);
+    }
   );
 });
