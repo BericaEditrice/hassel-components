@@ -3,7 +3,7 @@ function initScalingHamburgerNavigation(scope = document) {
   if (!navs.length) return;
 
   navs.forEach((nav) => {
-    // Toggle menu
+    // Toggle menu principale
     nav.querySelectorAll('[data-navigation-toggle="toggle"]').forEach((btn) => {
       btn.addEventListener("click", () => {
         const active = nav.getAttribute("data-navigation-status") === "active";
@@ -14,30 +14,29 @@ function initScalingHamburgerNavigation(scope = document) {
       });
     });
 
-    // Close on overlay
+    // Chiudi menu (overlay o ESC)
     nav.querySelectorAll('[data-navigation-toggle="close"]').forEach((btn) => {
       btn.addEventListener("click", () =>
         nav.setAttribute("data-navigation-status", "not-active")
       );
     });
-
-    // ESC key
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape")
         nav.setAttribute("data-navigation-status", "not-active");
     });
 
-    // Submenu toggle (click only on parents)
+    // Toggle submenu SOLO sul chevron
     nav
       .querySelectorAll(
-        ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
+        ".hamburger-nav__li.menu-item-has-children .nav-link__dropdown-icon"
       )
-      .forEach((link) => {
-        link.addEventListener("click", (e) => {
-          const li = link.closest(".hamburger-nav__li");
+      .forEach((icon) => {
+        icon.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const li = icon.closest(".hamburger-nav__li");
           const submenu = li.querySelector(".hamburger-nav__submenu");
           if (submenu) {
-            e.preventDefault();
             submenu.classList.toggle("is-open");
             li.classList.toggle("is-open");
           }
@@ -46,21 +45,21 @@ function initScalingHamburgerNavigation(scope = document) {
   });
 }
 
-// Run on DOM ready (frontend)
+// Frontend: DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   initScalingHamburgerNavigation(document);
 
-  // Observer fallback (es. markup dinamico o lazy load)
+  // Fallback per markup dinamico
   const observer = new MutationObserver(() => {
     initScalingHamburgerNavigation(document);
   });
   observer.observe(document.body, { childList: true, subtree: true });
 });
 
-// Elementor editor hook
+// Elementor editor
 window.addEventListener("elementor/frontend/init", () => {
   elementorFrontend.hooks.addAction(
-    "frontend/element_ready/hassel_scaling_hamburger_navigation.default",
+    "frontend/element_ready/hassel_hamburger_navigation.default",
     ($scope) => {
       initScalingHamburgerNavigation($scope[0]);
     }

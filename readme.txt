@@ -5,7 +5,7 @@ Tags: elementor, widgets, design, animation, hassel
 Requires at least: 6.0
 Tested up to: 6.8.3
 Requires PHP: 8.0
-Stable tag: 1.1.06
+Stable tag: 1.1.08
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,12 @@ Sì, è compatibile sia con Elementor Free che Pro.
 Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e collega il token GitHub.
 
 == Changelog ==
+
+= 1.1.08 =
+* Ottimizzazione JS
+
+= 1.1.07 =
+* Correzione bug
 
 = 1.1.06 =
 * feat(nav): aggiunto widget Scaling Hamburger Navigation (frontend + editor)
