@@ -1,4 +1,4 @@
-/* === NAV CONTAINER === */
+/* === NAVIGATION CONTAINER === */
 .navigation {
   z-index: 500;
   pointer-events: none;
@@ -29,7 +29,6 @@
   right: 1em;
 }
 
-/* sfondo che si espande */
 .hamburger-nav__bg {
   transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
   background-color: #e2e1df;
@@ -46,7 +45,7 @@
   height: 100%;
 }
 
-/* contenuto menu */
+/* === MENU GROUP === */
 .hamburger-nav__group {
   transition:
     all 0.5s cubic-bezier(0.5, 0.5, 0, 1),
@@ -59,8 +58,6 @@
   opacity: 0;
   visibility: hidden;
   padding: 2em;
-  min-width: var(--menu-min-width, auto);
-  min-height: var(--menu-min-height, auto);
 }
 
 [data-navigation-status="active"] .hamburger-nav__group {
@@ -69,17 +66,16 @@
   visibility: visible;
 }
 
-/* titolo menu */
+/* === MENU TITLE === */
 .hamburger-nav__menu-p {
   opacity: 0.5;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin: 0 0 0.5em 0;
+  margin: 0 0 0.75em 0;
   font-size: 1em;
-  color: var(--menu-title-color, inherit);
 }
 
-/* lista principale */
+/* === MENU LIST === */
 .hamburger-nav__ul {
   display: flex;
   flex-direction: column;
@@ -89,7 +85,6 @@
   position: relative;
 }
 
-/* elemento singolo */
 .hamburger-nav__li {
   list-style: none;
   margin: 0;
@@ -97,9 +92,9 @@
   position: relative;
 }
 
-/* link */
+/* === MENU LINKS === */
 .hamburger-nav__a {
-  color: var(--menu-color, #131313);
+  color: #131313;
   justify-content: space-between;
   align-items: center;
   text-decoration: none;
@@ -108,17 +103,16 @@
 }
 
 .hamburger-nav__a:hover {
-  color: var(--menu-hover-color, #444);
+  color: #444;
 }
 
-/* stato attivo */
 .hamburger-nav__a[aria-current],
 .hamburger-nav__li.current-menu-item > .hamburger-nav__a,
 .hamburger-nav__li.current_page_item > .hamburger-nav__a {
-  color: var(--menu-active-color, #0a0);
+  color: #0a0;
 }
 
-/* testo link */
+/* === MENU TEXT === */
 .hamburger-nav__p {
   white-space: nowrap;
   margin: 0;
@@ -126,19 +120,17 @@
   font-size: 2em;
 }
 
-/* === DOT (solo leaf items) === */
+/* === DOT INDICATOR === */
 .hamburger-nav__dot {
   transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
-  background-color: var(--dot-color, currentColor);
+  background-color: currentColor;
   border-radius: 50%;
   flex-shrink: 0;
-  width: var(--dot-size, 0.5em);
-  height: var(--dot-size, 0.5em);
+  width: 0.5em;
+  height: 0.5em;
   transform: scale(0) rotate(0.001deg);
   opacity: 0.5;
 }
-
-/* Hover e stato attivo */
 .hamburger-nav__a:hover .hamburger-nav__dot {
   transform: scale(1) rotate(0.001deg);
   opacity: 0.25;
@@ -148,17 +140,11 @@
   transform: scale(1) rotate(0.001deg);
   opacity: 1;
 }
-
-/* Nascondi dot nei genitori */
+/* hide dot on parent items with submenu */
 .hamburger-nav__li.menu-item-has-children
   > .hamburger-nav__a
   .hamburger-nav__dot {
   display: none;
-}
-
-/* Dot disattivato */
-.elementor-element[data-settings*='"dot_show":"no"'] .hamburger-nav__dot {
-  display: none !important;
 }
 
 /* === SUBMENU === */
@@ -170,34 +156,39 @@
   overflow: hidden;
   opacity: 0;
   transition: all 0.4s ease;
-  padding-left: var(--submenu-indent, 1em);
-  margin: 0.25em 0 0 0;
+  padding-left: var(--submenu-indent, 1.5em);
+  margin: 0.35em 0 0 0;
 }
-
 .hamburger-nav__submenu.is-open {
   max-height: 600px;
   opacity: 1;
 }
-
-/* link del submenu leggermente più piccoli */
 .hamburger-nav__submenu .hamburger-nav__a {
   font-size: 0.9em;
 }
 
-/* chevron: area clic più ampia, non altera troppo il layout */
-.nav-link__dropdown-icon {
-  transition: transform 0.4s ease;
-  width: var(--chevron-size, 1.25em);
-  flex-shrink: 0;
-  display: inline-flex;
+/* === DROPDOWN ICON WRAPPER === */
+.nav-link__dropdown-icon-wrapper {
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5em 0.75em; /* <-- aumenta area clic */
-  cursor: pointer; /* feedback visivo di click */
+  padding: 0.75em 1em;
+  cursor: pointer;
+  margin-left: 0.25em;
+  flex-shrink: 0;
 }
+
+.nav-link__dropdown-icon {
+  transition: transform 0.4s ease;
+  width: 1.25em;
+  height: auto;
+  display: block;
+}
+
 .nav-link__dropdown-icon path {
-  stroke: var(--chevron-color, currentColor);
+  stroke: currentColor;
 }
+
 .hamburger-nav__li.menu-item-has-children.is-open
   > .hamburger-nav__a
   .nav-link__dropdown-icon {
@@ -212,49 +203,50 @@
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  width: var(--hamburger-size, 3.5em);
-  height: var(--hamburger-size, 3.5em);
+  width: 3.5em;
+  height: 3.5em;
   display: flex;
   position: absolute;
   top: 0;
   right: 0;
   transform: translate(0, 0) rotate(0.001deg);
 }
-
 [data-navigation-status="active"] .hamburger-nav__toggle {
   transform: translate(-1em, 1em) rotate(0.001deg);
 }
 
-/* barre dell'hamburger */
+/* toggle bars */
 .hamburger-nav__toggle-bar {
   transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
-  background-color: var(--hamburger-bar-color, #131313);
+  background-color: #131313;
   width: 40%;
-  height: var(--hamburger-bar-thickness, 0.125em);
+  height: 0.125em;
   position: absolute;
   transform: translateY(-0.15em) rotate(0.001deg);
 }
-
 .hamburger-nav__toggle:hover .hamburger-nav__toggle-bar {
   transform: translateY(0.15em) rotate(0.001deg);
 }
-
 [data-navigation-status="active"]
   .hamburger-nav__toggle
   .hamburger-nav__toggle-bar {
   transform: translateY(0) rotate(45deg);
 }
-
 .hamburger-nav__toggle .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(0.15em) rotate(0.001deg);
 }
-
 .hamburger-nav__toggle:hover .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(-0.15em) rotate(0.001deg);
 }
-
 [data-navigation-status="active"]
   .hamburger-nav__toggle
   .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(0) rotate(-45deg);
+}
+
+/* === RESPONSIVE VARIABILI === */
+:root {
+  --menu-gap: 0.5em;
+  --submenu-gap: 0.4em;
+  --submenu-indent: 1.5em;
 }

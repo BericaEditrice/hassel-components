@@ -16,33 +16,39 @@ class Scaling_Hamburger_Navigation extends Widget_Base
     {
         return 'hassel_scaling_hamburger_navigation';
     }
+
     public function get_title()
     {
         return __('Scaling Hamburger Navigation', 'hassel-components');
     }
+
     public function get_icon()
     {
         return 'eicon-nav-menu';
     }
+
     public function get_categories()
     {
         return ['hassel-library'];
     }
+
     public function get_style_depends()
     {
         return ['hassel-scaling-hamburger-navigation-css'];
     }
+
     public function get_script_depends()
     {
         return ['hassel-scaling-hamburger-navigation-js'];
     }
 
+    /* ------------------ CONTROLLI ------------------ */
     protected function register_controls()
     {
 
-        /* ------------------ CONTENUTO ------------------ */
+        /* === CONTENUTO === */
         $this->start_controls_section('content_section', [
-            'label' => __('Menu', 'hassel-components'),
+            'label' => __('Contenuto', 'hassel-components'),
             'tab' => Controls_Manager::TAB_CONTENT,
         ]);
 
@@ -61,24 +67,24 @@ class Scaling_Hamburger_Navigation extends Widget_Base
 
         $this->end_controls_section();
 
-        /* ------------------ LAYOUT ------------------ */
+        /* === LAYOUT GENERALE === */
         $this->start_controls_section('layout_section', [
             'label' => __('Layout', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_responsive_control('min_width', [
-            'label' => __('Larghezza (min-width)', 'hassel-components'),
+            'label' => __('Larghezza minima', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem'],
+            'size_units' => ['px', 'em', 'rem', '%'],
             'range' => ['px' => ['min' => 0, 'max' => 1600]],
             'selectors' => ['{{WRAPPER}} .hamburger-nav' => 'min-width: {{SIZE}}{{UNIT}};'],
         ]);
 
         $this->add_responsive_control('min_height', [
-            'label' => __('Altezza (min-height)', 'hassel-components'),
+            'label' => __('Altezza minima', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem'],
+            'size_units' => ['px', 'em', 'rem', '%'],
             'range' => ['px' => ['min' => 0, 'max' => 1200]],
             'selectors' => ['{{WRAPPER}} .hamburger-nav' => 'min-height: {{SIZE}}{{UNIT}};'],
         ]);
@@ -87,19 +93,25 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'label' => __('Padding contenitore', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', 'em', 'rem', '%'],
-            'selectors' => ['{{WRAPPER}} .hamburger-nav__group' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav__group' =>
+                    'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ],
         ]);
 
         $this->add_responsive_control('container_margin', [
             'label' => __('Margine', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', 'em', 'rem', '%'],
-            'selectors' => ['{{WRAPPER}} .hamburger-nav' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav' =>
+                    'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ],
         ]);
 
         $this->end_controls_section();
 
-        /* ------------------ TITOLO MENU ------------------ */
+        /* === TITOLO MENU === */
         $this->start_controls_section('menu_label_style', [
             'label' => __('Titolo Menu', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -118,7 +130,7 @@ class Scaling_Hamburger_Navigation extends Widget_Base
 
         $this->end_controls_section();
 
-        /* ------------------ MENU PRINCIPALE ------------------ */
+        /* === VOCI MENU PRINCIPALE === */
         $this->start_controls_section('main_menu_style', [
             'label' => __('Voci Menu Principale', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -147,7 +159,6 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'selectors' => [
                 '{{WRAPPER}} .hamburger-nav__a[aria-current]' => 'color: {{VALUE}};',
                 '{{WRAPPER}} .hamburger-nav__li.current-menu-item > .hamburger-nav__a' => 'color: {{VALUE}};',
-                '{{WRAPPER}} .hamburger-nav__li.current_page_item > .hamburger-nav__a' => 'color: {{VALUE}};',
             ],
         ]);
 
@@ -155,13 +166,12 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'label' => __('Spaziatura tra voci', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 0, 'max' => 100]],
             'selectors' => ['{{WRAPPER}} .hamburger-nav__ul' => 'row-gap: {{SIZE}}{{UNIT}};'],
         ]);
 
         $this->end_controls_section();
 
-        /* ------------------ SOTTOMENU ------------------ */
+        /* === SOTTOMENU === */
         $this->start_controls_section('submenu_style', [
             'label' => __('Sottomenu', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -184,15 +194,6 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'selectors' => ['{{WRAPPER}} .hamburger-nav__submenu .hamburger-nav__a:hover' => 'color: {{VALUE}};'],
         ]);
 
-        $this->add_control('submenu_active_color', [
-            'label' => __('Colore attivo', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav__submenu .hamburger-nav__a[aria-current]' => 'color: {{VALUE}};',
-                '{{WRAPPER}} .hamburger-nav__submenu .current-menu-item > .hamburger-nav__a' => 'color: {{VALUE}};',
-            ],
-        ]);
-
         $this->add_responsive_control('submenu_indent', [
             'label' => __('Indentazione sinistra', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
@@ -201,7 +202,7 @@ class Scaling_Hamburger_Navigation extends Widget_Base
         ]);
 
         $this->add_responsive_control('submenu_gap', [
-            'label' => __('Spaziatura tra voci del sottomenu', 'hassel-components'),
+            'label' => __('Spaziatura tra voci sottomenu', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
             'selectors' => ['{{WRAPPER}} .hamburger-nav__submenu' => 'row-gap: {{SIZE}}{{UNIT}};'],
@@ -209,7 +210,7 @@ class Scaling_Hamburger_Navigation extends Widget_Base
 
         $this->end_controls_section();
 
-        /* === STILE: PALLINO (DOT) === */
+        /* === PALLINO === */
         $this->start_controls_section('dot_style', [
             'label' => __('Indicatore Pallino', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -227,9 +228,7 @@ class Scaling_Hamburger_Navigation extends Widget_Base
         $this->add_control('dot_color', [
             'label' => __('Colore pallino', 'hassel-components'),
             'type' => Controls_Manager::COLOR,
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav__dot' => 'background-color: {{VALUE}};',
-            ],
+            'selectors' => ['{{WRAPPER}} .hamburger-nav__dot' => 'background-color: {{VALUE}};'],
             'condition' => ['dot_show' => 'yes'],
         ]);
 
@@ -237,43 +236,13 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'label' => __('Dimensione pallino', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 2, 'max' => 30]],
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav__dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
-            ],
+            'selectors' => ['{{WRAPPER}} .hamburger-nav__dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};'],
             'condition' => ['dot_show' => 'yes'],
         ]);
 
         $this->end_controls_section();
 
-        /* === STILE: CHEVRON === */
-        $this->start_controls_section('chevron_style', [
-            'label' => __('Icona Chevron', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_control('chevron_color', [
-            'label' => __('Colore icona', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'selectors' => [
-                '{{WRAPPER}} .nav-link__dropdown-icon path' => 'stroke: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_responsive_control('chevron_size', [
-            'label' => __('Dimensione icona', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 8, 'max' => 48]],
-            'selectors' => [
-                '{{WRAPPER}} .nav-link__dropdown-icon' => 'width: {{SIZE}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->end_controls_section();
-
-
-        /* ------------------ ICONA HAMBURGER ------------------ */
+        /* === ICONA HAMBURGER === */
         $this->start_controls_section('hamburger_style', [
             'label' => __('Icona Hamburger', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -295,7 +264,6 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'label' => __('Spessore linee', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 1, 'max' => 10]],
             'selectors' => ['{{WRAPPER}} .hamburger-nav__toggle-bar' => 'height: {{SIZE}}{{UNIT}};'],
         ]);
 
@@ -311,8 +279,9 @@ class Scaling_Hamburger_Navigation extends Widget_Base
     {
         $menus = wp_get_nav_menus();
         $options = [];
-        foreach ($menus as $menu)
+        foreach ($menus as $menu) {
             $options[$menu->slug] = $menu->name;
+        }
         return $options;
     }
 
@@ -320,33 +289,32 @@ class Scaling_Hamburger_Navigation extends Widget_Base
     {
         $s = $this->get_settings_for_display();
         $menu_slug = $s['menu_id'] ?? '';
+
         if (empty($menu_slug)) {
             echo '<p style="color:#888;">' . __('Seleziona un menu WordPress nel pannello.', 'hassel-components') . '</p>';
             return;
         }
 
         echo '<nav data-navigation-status="not-active" class="navigation">';
-        echo '  <div data-navigation-toggle="close" class="navigation__dark-bg"></div>';
-        echo '  <div class="hamburger-nav">';
-        echo '    <div class="hamburger-nav__bg"></div>';
-        echo '    <div class="hamburger-nav__group">';
-        echo '      <p class="hamburger-nav__menu-p">' . esc_html($s['menu_label_text']) . '</p>';
-        echo '      <ul class="hamburger-nav__ul">';
-
+        echo '<div data-navigation-toggle="close" class="navigation__dark-bg"></div>';
+        echo '<div class="hamburger-nav">';
+        echo '<div class="hamburger-nav__bg"></div>';
+        echo '<div class="hamburger-nav__group">';
+        echo '<p class="hamburger-nav__menu-p">' . esc_html($s['menu_label_text']) . '</p>';
+        echo '<ul class="hamburger-nav__ul">';
         wp_nav_menu([
             'menu' => $menu_slug,
             'container' => false,
             'items_wrap' => '%3$s',
             'walker' => new \Hassel\Widgets\Scaling_Hamburger_Navigation_Walker(),
         ]);
-
-        echo '      </ul>';
-        echo '    </div>';
-        echo '    <div data-navigation-toggle="toggle" class="hamburger-nav__toggle">';
-        echo '      <div class="hamburger-nav__toggle-bar"></div>';
-        echo '      <div class="hamburger-nav__toggle-bar"></div>';
-        echo '    </div>';
-        echo '  </div>';
+        echo '</ul>';
+        echo '</div>';
+        echo '<div data-navigation-toggle="toggle" class="hamburger-nav__toggle">';
+        echo '<div class="hamburger-nav__toggle-bar"></div>';
+        echo '<div class="hamburger-nav__toggle-bar"></div>';
+        echo '</div>';
+        echo '</div>';
         echo '</nav>';
     }
 }
