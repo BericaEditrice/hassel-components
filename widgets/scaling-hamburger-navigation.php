@@ -69,7 +69,7 @@ class Scaling_Hamburger_Navigation extends Widget_Base
         $this->end_controls_section();
 
 
-        /* ----------- STILE: INTESTAZIONE MENU ("MENU") ----------- */
+        /* ----------- STILE: TITOLO MENU ----------- */
         $this->start_controls_section('menu_label_style', [
             'label' => __('Titolo Menu', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -127,6 +127,20 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'selectors' => ['{{WRAPPER}} .hamburger-nav__dot' => 'background-color: {{VALUE}};'],
         ]);
 
+        $this->add_responsive_control('dot_size', [
+            'label' => __('Dimensione pallino', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem', '%'],
+            'range' => [
+                'px' => ['min' => 2, 'max' => 30],
+                'em' => ['min' => 0.1, 'max' => 3],
+            ],
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav__dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+            ],
+            'condition' => ['show_dot' => 'yes'],
+        ]);
+
         $this->end_controls_section();
 
 
@@ -182,6 +196,25 @@ class Scaling_Hamburger_Navigation extends Widget_Base
             'selectors' => ['{{WRAPPER}} .hamburger-nav__bg' => 'background-color: {{VALUE}};'],
         ]);
 
+        $this->add_responsive_control('hamburger_size', [
+            'label' => __('Dimensione cerchio', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 20, 'max' => 200]],
+            'selectors' => [
+                '{{WRAPPER}} .hamburger-nav__toggle' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                '{{WRAPPER}} .hamburger-nav__bg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('hamburger_line_thickness', [
+            'label' => __('Spessore linee', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 1, 'max' => 10]],
+            'selectors' => ['{{WRAPPER}} .hamburger-nav__toggle-bar' => 'height: {{SIZE}}{{UNIT}};'],
+        ]);
+
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
             'name' => 'hamburger_shadow',
             'selector' => '{{WRAPPER}} .hamburger-nav__bg',
@@ -203,89 +236,8 @@ class Scaling_Hamburger_Navigation extends Widget_Base
         ]);
 
         $this->end_controls_section();
-
-
-        /* ----------- STILE: ANIMAZIONI ----------- */
-        $this->start_controls_section('animation_section', [
-            'label' => __('Animazione', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_control('animation_type', [
-            'label' => __('Tipo di animazione', 'hassel-components'),
-            'type' => Controls_Manager::SELECT,
-            'default' => 'ease-in-out',
-            'options' => [
-                'ease' => 'Ease',
-                'ease-in' => 'Ease In',
-                'ease-out' => 'Ease Out',
-                'ease-in-out' => 'Ease In-Out',
-                'linear' => 'Linear',
-                'cubic-bezier(0.5, 0.5, 0, 1)' => 'Custom (cubic-bezier)',
-            ],
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav__bg, {{WRAPPER}} .hamburger-nav__group' => 'transition-timing-function: {{VALUE}};',
-            ],
-        ]);
-
-        $this->add_control('animation_duration', [
-            'label' => __('Durata animazione (s)', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['s'],
-            'range' => ['s' => ['min' => 0.1, 'max' => 2, 'step' => 0.1]],
-            'default' => ['size' => 0.7, 'unit' => 's'],
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav__bg, {{WRAPPER}} .hamburger-nav__group' => 'transition-duration: {{SIZE}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->end_controls_section();
-
-
-        /* ----------- STILE: LAYOUT ----------- */
-        $this->start_controls_section('layout_section', [
-            'label' => __('Layout', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_responsive_control('nav_min_width', [
-            'label' => __('Min-width', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem', '%', 'vw'],
-            'range' => ['px' => ['min' => 50, 'max' => 1200]],
-            'selectors' => ['{{WRAPPER}} .hamburger-nav' => 'min-width: {{SIZE}}{{UNIT}};'],
-        ]);
-
-        $this->add_responsive_control('nav_min_height', [
-            'label' => __('Min-height', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem', '%', 'vh'],
-            'range' => ['px' => ['min' => 50, 'max' => 1200]],
-            'selectors' => ['{{WRAPPER}} .hamburger-nav' => 'min-height: {{SIZE}}{{UNIT}};'],
-        ]);
-
-        $this->add_responsive_control('nav_padding', [
-            'label' => __('Padding', 'hassel-components'),
-            'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => ['px', 'em', 'rem', '%', 'vw', 'vh'],
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->add_responsive_control('nav_margin', [
-            'label' => __('Margine', 'hassel-components'),
-            'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => ['px', 'em', 'rem', '%', 'vw', 'vh'],
-            'selectors' => [
-                '{{WRAPPER}} .hamburger-nav' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->end_controls_section();
     }
 
-    /* ----------- MENU ----------- */
     private function get_menus()
     {
         $menus = wp_get_nav_menus();
@@ -296,7 +248,6 @@ class Scaling_Hamburger_Navigation extends Widget_Base
         return $options;
     }
 
-    /* ----------- OUTPUT ----------- */
     protected function render()
     {
         $settings = $this->get_settings_for_display();
