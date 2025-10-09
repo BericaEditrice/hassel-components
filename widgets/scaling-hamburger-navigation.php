@@ -242,6 +242,54 @@ class Scaling_Hamburger_Navigation extends Widget_Base
 
         $this->end_controls_section();
 
+        /* === STILE: ICONA CHEVRON (SOTTOMENU) === */
+        $this->start_controls_section('chevron_style', [
+            'label' => __('Icona Chevron', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_control('chevron_color', [
+            'label' => __('Colore icona', 'hassel-components'),
+            'type' => Controls_Manager::COLOR,
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon path' => 'stroke: {{VALUE}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('chevron_size', [
+            'label' => __('Dimensione icona', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 8, 'max' => 64]],
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon' => 'width: {{SIZE}}{{UNIT}}; height: auto;',
+            ],
+        ]);
+
+        $this->add_responsive_control('chevron_padding', [
+            'label' => __('Spaziatura cliccabile (padding)', 'hassel-components'),
+            'type' => Controls_Manager::DIMENSIONS,
+            'size_units' => ['px', 'em', 'rem'],
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon' =>
+                    'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_control('chevron_transition_duration', [
+            'label' => __('Durata animazione rotazione (s)', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['s'],
+            'range' => ['s' => ['min' => 0.1, 'max' => 2, 'step' => 0.1]],
+            'default' => ['size' => 0.4, 'unit' => 's'],
+            'selectors' => [
+                '{{WRAPPER}} .nav-link__dropdown-icon' =>
+                    'transition: transform {{SIZE}}{{UNIT}} ease;',
+            ],
+        ]);
+
+        $this->end_controls_section();
+
         /* === ICONA HAMBURGER === */
         $this->start_controls_section('hamburger_style', [
             'label' => __('Icona Hamburger', 'hassel-components'),
