@@ -5,7 +5,7 @@ Tags: elementor, widgets, design, animation, hassel
 Requires at least: 6.0
 Tested up to: 6.8.3
 Requires PHP: 8.0
-Stable tag: 1.1.05
+Stable tag: 1.1.06
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,19 @@ Sì, è compatibile sia con Elementor Free che Pro.
 Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e collega il token GitHub.
 
 == Changelog ==
+
+= 1.1.06 =
+* feat(nav): aggiunto widget Scaling Hamburger Navigation (frontend + editor)
+* Nuovo widget Elementor 'Scaling Hamburger Navigation' con walker personalizzato
+* Animazione di apertura/chiusura funzionante sia in frontend che in editor Elementor
+ *Controlli Elementor:
+  - min-width / min-height, padding e margini contenitore
+  - tipografia e colori per titolo, voci principali e sottomenu
+  - colore attivo/hover; nessun pallino sui genitori
+  - gap tra voci (menu e submenu) e indentazione sinistra del submenu
+  - controlli icona hamburger (colori + spessore linee)
+* CSS rifattorizzato con chevron animato e transizioni submenu
+* Registrazione asset e hook aggiornati
 
 = 1.1.05 =
 * Nav: active colors, no dot on parents, submenu click toggle, JS init for frontend+editor, removed circle size control
