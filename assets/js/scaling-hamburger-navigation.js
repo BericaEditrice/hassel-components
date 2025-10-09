@@ -47,3 +47,20 @@ function initScalingHamburgerNavigation() {
 document.addEventListener("DOMContentLoaded", function () {
   initScalingHamburgerNavigation();
 });
+
+// Sottomenu toggle on click
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .querySelectorAll(
+      ".hamburger-nav__li.menu-item-has-children > .hamburger-nav__a"
+    )
+    .forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const submenu = link.nextElementSibling;
+        if (submenu && submenu.classList.contains("hamburger-nav__submenu")) {
+          submenu.classList.toggle("is-open");
+        }
+      });
+    });
+});

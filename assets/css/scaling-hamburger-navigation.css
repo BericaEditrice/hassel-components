@@ -193,3 +193,12 @@
   .hamburger-nav__toggle-bar:nth-child(2) {
   transform: translateY(0em) rotate(-45deg);
 }
+
+.hamburger-nav__submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.hamburger-nav__submenu.is-open {
+  max-height: 500px; /* puoi regolare */
+}
