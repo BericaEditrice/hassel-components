@@ -35,18 +35,18 @@ class Button_Stagger extends Widget_Base
 
     public function get_style_depends()
     {
-        return ['hassel-components-css'];
+        return ['hassel-button-stagger-css'];
     }
 
     public function get_script_depends()
     {
-        return ['hassel-components-js'];
+        return ['hassel-button-stagger-js'];
     }
 
     protected function register_controls()
     {
 
-        /* ----------- SEZIONE CONTENUTO ----------- */
+        /* === CONTENUTO === */
         $this->start_controls_section('content_section', [
             'label' => __('Contenuto', 'hassel-components'),
             'tab' => Controls_Manager::TAB_CONTENT,
@@ -55,7 +55,7 @@ class Button_Stagger extends Widget_Base
         $this->add_control('text', [
             'label' => __('Testo', 'hassel-components'),
             'type' => Controls_Manager::TEXT,
-            'default' => 'Staggering Button',
+            'default' => __('Staggering Button', 'hassel-components'),
         ]);
 
         $this->add_control('link', [
@@ -67,23 +67,23 @@ class Button_Stagger extends Widget_Base
         $this->end_controls_section();
 
 
-        /* ----------- SEZIONE STILE ----------- */
+        /* === STILE === */
         $this->start_controls_section('style_section', [
             'label' => __('Stile', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        // TIPOGRAFIA
+        // Tipografia
         $this->add_group_control(Group_Control_Typography::get_type(), [
             'name' => 'typography',
             'selector' => '{{WRAPPER}} .btn-animate-chars__text',
         ]);
 
-        // TABS NORMALE / HOVER
+        // Tabs Stato
         $this->start_controls_tabs('tabs_button_style');
 
-        // ---- NORMALE ----
-        $this->start_controls_tab('tab_button_normal', ['label' => __('Normale', 'hassel-components')]);
+        // Normale
+        $this->start_controls_tab('tab_normal', ['label' => __('Normale', 'hassel-components')]);
 
         $this->add_control('text_color', [
             'label' => __('Colore testo', 'hassel-components'),
@@ -99,8 +99,8 @@ class Button_Stagger extends Widget_Base
 
         $this->end_controls_tab();
 
-        // ---- HOVER ----
-        $this->start_controls_tab('tab_button_hover', ['label' => __('Hover', 'hassel-components')]);
+        // Hover
+        $this->start_controls_tab('tab_hover', ['label' => __('Hover', 'hassel-components')]);
 
         $this->add_control('hover_text_color', [
             'label' => __('Colore testo (hover)', 'hassel-components'),
@@ -114,28 +114,20 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        // 🎚️ DURATA ANIMAZIONE HOVER — SLIDER UFFICIALE
+        // Slider durata animazione
         $this->add_control('hover_animation_duration', [
-            'label' => __('Durata animazione hover (s)', 'hassel-components'),
+            'label' => __('Durata animazione (s)', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
-            'range' => [
-                's' => [
-                    'min' => 0.1,
-                    'max' => 5,
-                    'step' => 0.1,
-                ],
-            ],
-            'default' => [
-                'unit' => 's',
-                'size' => 0.6,
-            ],
+            'size_units' => ['s'],
+            'range' => ['s' => ['min' => 0.1, 'max' => 5, 'step' => 0.1]],
+            'default' => ['unit' => 's', 'size' => 0.6],
             'selectors' => [
                 '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}}s;',
                 '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}}s;',
             ],
         ]);
 
-        // ⚙️ EASING UNICO (ENTRATA + USCITA)
+        // Easing
         $this->add_control('animation_easing', [
             'label' => __('Tipo di animazione', 'hassel-components'),
             'type' => Controls_Manager::SELECT,
@@ -157,7 +149,7 @@ class Button_Stagger extends Widget_Base
         $this->end_controls_tab();
         $this->end_controls_tabs();
 
-        // 🔲 PADDING
+        // Padding
         $this->add_responsive_control('padding', [
             'label' => __('Padding', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
@@ -168,13 +160,13 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // 🟦 BORDO
+        // Border
         $this->add_group_control(Group_Control_Border::get_type(), [
             'name' => 'border',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
         ]);
 
-        // 🔵 RAGGIO BORDO
+        // Border Radius
         $this->add_responsive_control('border_radius', [
             'label' => __('Raggio bordo', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
@@ -185,7 +177,7 @@ class Button_Stagger extends Widget_Base
             ],
         ]);
 
-        // 🌫️ OMBRA
+        // Box Shadow
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
             'name' => 'box_shadow',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
