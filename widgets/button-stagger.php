@@ -211,7 +211,7 @@ class Button_Stagger extends Widget_Base
         $target = !empty($s['link']['is_external']) ? ' target="_blank"' : '';
         $rel = !empty($s['link']['nofollow']) ? ' rel="nofollow"' : '';
 
-        echo '<a href="' . esc_url($link) . '" aria-label="' . esc_attr($s['text']) . '" class="btn-animate-chars"' . $target . $rel . '>';
+        echo '<a href="' . esc_url($link) . '" aria-label="' . esc_attr($s['text']) . '" role="button" class="btn-animate-chars"' . $target . $rel . '>';
         echo ' <div class="btn-animate-chars__bg"></div>';
         echo ' <span data-button-animate-chars class="btn-animate-chars__text">' . esc_html($s['text']) . '</span>';
         echo '</a>';
