@@ -3,7 +3,7 @@
  * Plugin Name: Hassel Components for Elementor
  * Plugin URI: https://github.com/BericaEditrice/hassel-components
  * Description: Libreria di componenti Elementor sviluppata da Hassel Omnichannel.
- * Version: 1.1.17
+ * Version: 1.2.01
  * Author: Hassel Omnichannel
  * Author URI: https://hassel.it
  * Requires at least: 6.0
@@ -17,7 +17,7 @@ if (!defined('ABSPATH'))
     exit;
 
 // === Costanti ===
-define('HASSEL_COMPONENTS_VERSION', '1.1.17');
+define('HASSEL_COMPONENTS_VERSION', '1.2.01');
 define('HASSEL_COMPONENTS_PATH', plugin_dir_path(__FILE__));
 define('HASSEL_COMPONENTS_URL', plugin_dir_url(__FILE__));
 
@@ -97,6 +97,26 @@ add_action('plugins_loaded', function () {
             true
         );
     });
+
+    /**
+     * =======================================
+     *  WIDGET: BUTTON ARROW ANIMATED
+     * =======================================
+     */
+    wp_register_style(
+        'hassel-button-arrow-animated-css',
+        HASSEL_COMPONENTS_URL . 'assets/css/button-arrow-animated.css',
+        [],
+        HASSEL_COMPONENTS_VERSION
+    );
+
+    wp_register_script(
+        'hassel-button-arrow-animated-js',
+        HASSEL_COMPONENTS_URL . 'assets/js/button-arrow-animated.js',
+        [],
+        HASSEL_COMPONENTS_VERSION,
+        true
+    );
 
     /**
      * =====================================================

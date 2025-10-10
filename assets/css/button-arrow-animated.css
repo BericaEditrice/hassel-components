@@ -1,0 +1,41 @@
+.button-arrow-animated {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button-arrow-animated__text {
+  font-family: inherit;
+  font-weight: 400;
+  color: #585857;
+  font-size: 1.3rem;
+  transition: color 0.3s ease;
+}
+
+.button-arrow-animated__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #8d9c71;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-arrow-animated__icon svg {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-arrow-animated:hover .button-arrow-animated__icon svg {
+  transform: rotate(-35deg);
+}
+
+.button-arrow-animated:hover .button-arrow-animated__icon {
+  transform: scale(1.1);
+}
