@@ -5,7 +5,7 @@ Tags: elementor, widgets, design, animation, hassel
 Requires at least: 6.0
 Tested up to: 6.8.3
 Requires PHP: 8.0
-Stable tag: 1.1.15
+Stable tag: 1.1.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ Sì, è compatibile sia con Elementor Free che Pro.
 Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e collega il token GitHub.
 
 == Changelog ==
+
+= 1.1.16 =
+* Fix bug Button Stagger
 
 = 1.1.15 =
 * Ottimizzazione Button Stagger

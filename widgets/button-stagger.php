@@ -35,12 +35,12 @@ class Button_Stagger extends Widget_Base
 
     public function get_style_depends()
     {
-        return ['hassel-components-css'];
+        return ['hassel-button-stagger-css'];
     }
 
     public function get_script_depends()
     {
-        return ['hassel-components-js'];
+        return ['hassel-button-stagger-js'];
     }
 
     protected function register_controls()
