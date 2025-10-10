@@ -5,7 +5,7 @@ Tags: elementor, widgets, design, animation, hassel
 Requires at least: 6.0
 Tested up to: 6.8.3
 Requires PHP: 8.0
-Stable tag: 1.1.13
+Stable tag: 1.1.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,8 +35,11 @@ Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e co
 
 == Changelog ==
 
+= 1.1.14 =
+* Ottimizzazione Button Stagger
+
 = 1.1.13 =
-* Ottimizzazione Codicen
+* Ottimizzazione Codice
 
 = 1.1.12 =
 * Ottimizzazione Chevron

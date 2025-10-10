@@ -1,20 +1,15 @@
-/* ==============================
-   HASSEL COMPONENTS — BUTTON STAGGER
-   ============================== */
-
 .btn-animate-chars {
   color: #131313;
   cursor: pointer;
   border-radius: 0.25em;
-  display: inline-flex;
   justify-content: center;
   align-items: center;
+  display: inline-flex;
   padding: 1em 2em;
   font-size: 1em;
   line-height: 1.3;
   text-decoration: none;
   position: relative;
-  width: auto;
   overflow: hidden;
 }
 
@@ -25,7 +20,6 @@
   z-index: 2;
 }
 
-/* Character animation */
 .btn-animate-chars [data-button-animate-chars] span {
   display: inline-block;
   position: relative;
@@ -38,7 +32,6 @@
   transform: translateY(-1.3em) rotate(0.001deg);
 }
 
-/* Background */
 .btn-animate-chars__bg {
   background-color: #efeeec;
   border-radius: 0.25em;
