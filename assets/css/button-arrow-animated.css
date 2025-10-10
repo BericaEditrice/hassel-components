@@ -29,6 +29,7 @@
 .button-arrow-animated__icon svg {
   display: block;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .button-arrow-animated:hover .button-arrow-animated__icon svg {
