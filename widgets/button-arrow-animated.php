@@ -4,8 +4,6 @@ namespace Hassel\Widgets;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Box_Shadow;
 
 if (!defined('ABSPATH'))
     exit;
@@ -62,6 +60,13 @@ class Button_Arrow_Animated extends Widget_Base
             'default' => ['url' => '#'],
         ]);
 
+        $this->add_control('custom_svg', [
+            'label' => __('Icona SVG personalizzata', 'hassel-components'),
+            'type' => Controls_Manager::MEDIA,
+            'media_types' => ['svg'],
+            'description' => __('Carica un file SVG personalizzato per sostituire la freccia di default.', 'hassel-components'),
+        ]);
+
         $this->end_controls_section();
 
         /* ========== STILE TESTO ========== */
@@ -114,10 +119,21 @@ class Button_Arrow_Animated extends Widget_Base
             'label' => __('Dimensione cerchio', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 16, 'max' => 128]],
+            'range' => ['px' => ['min' => 0, 'max' => 128]],
             'default' => ['size' => 32, 'unit' => 'px'],
             'selectors' => [
                 '{{WRAPPER}} .button-arrow-animated__icon' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+            ],
+        ]);
+
+        $this->add_responsive_control('arrow_size', [
+            'label' => __('Dimensione icona interna', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 0, 'max' => 64]],
+            'default' => ['size' => 11, 'unit' => 'px'],
+            'selectors' => [
+                '{{WRAPPER}} .button-arrow-animated__icon svg' => 'width: {{SIZE}}{{UNIT}}; height: auto;',
             ],
         ]);
 
@@ -131,12 +147,23 @@ class Button_Arrow_Animated extends Widget_Base
         $target = !empty($s['link']['is_external']) ? ' target="_blank"' : '';
         $rel = !empty($s['link']['nofollow']) ? ' rel="nofollow"' : '';
 
-        echo '<a href="' . esc_url($link) . '" role="button" class="button-arrow-animated" ' . $target . $rel . '>';
+        $custom_svg_url = $s['custom_svg']['url'] ?? '';
+        $svg_icon = '';
+
+        if (!empty($custom_svg_url)) {
+            // Permetti solo file SVG caricati
+            $svg_icon = file_get_contents($custom_svg_url);
+        } else {
+            // SVG di default (freccia)
+            $svg_icon = '<svg viewBox="0 0 11 8" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.3536 4.35355C10.5488 4.15829 10.5488 3.84171 10.3536 3.64645L7.17157 0.464466C6.97631 0.269204 6.65973 0.269204 6.46447 0.464466C6.2692 0.659728 6.2692 0.976311 6.46447 1.17157L9.29289 4L6.46447 6.82843C6.2692 7.02369 6.2692 7.34027 6.46447 7.53553C6.65973 7.7308 6.97631 7.7308 7.17157 7.53553L10.3536 4.35355ZM0 4L0 4.5L10 4.5V4V3.5L0 3.5L0 4Z" fill="white"/>
+            </svg>';
+        }
+
+        echo '<a href="' . esc_url($link) . '" role="button" class="button-arrow-animated"' . $target . $rel . '>';
         echo '  <span class="button-arrow-animated__text">' . esc_html($s['text']) . '</span>';
         echo '  <span class="button-arrow-animated__icon">';
-        echo '    <svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg">';
-        echo '      <path d="M10.3536 4.35355C10.5488 4.15829 10.5488 3.84171 10.3536 3.64645L7.17157 0.464466C6.97631 0.269204 6.65973 0.269204 6.46447 0.464466C6.2692 0.659728 6.2692 0.976311 6.46447 1.17157L9.29289 4L6.46447 6.82843C6.2692 7.02369 6.2692 7.34027 6.46447 7.53553C6.65973 7.7308 6.97631 7.7308 7.17157 7.53553L10.3536 4.35355ZM0 4L0 4.5L10 4.5V4V3.5L0 3.5L0 4Z" fill="white"/>';
-        echo '    </svg>';
+        echo $svg_icon;
         echo '  </span>';
         echo '</a>';
     }

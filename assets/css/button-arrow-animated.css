@@ -16,8 +16,6 @@
 }
 
 .button-arrow-animated__icon {
-  width: 32px;
-  height: 32px;
   border-radius: 50%;
   background-color: #8d9c71;
   display: flex;
@@ -29,6 +27,7 @@
 }
 
 .button-arrow-animated__icon svg {
+  display: block;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
