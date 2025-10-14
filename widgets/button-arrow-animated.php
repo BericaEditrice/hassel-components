@@ -54,6 +54,8 @@ class Button_Arrow_Animated extends Widget_Base
             'label' => __('Link', 'hassel-components'),
             'type' => Controls_Manager::URL,
             'default' => ['url' => '#'],
+            'dynamic' => ['active' => true], // ✅ Abilita i link dinamici (ACF, URL post, ecc.)
+            'placeholder' => __('https:// oppure seleziona un link dinamico', 'hassel-components'),
         ]);
 
         // SVG personalizzata (verrà iniettata inline e sanitizzata)
