@@ -18,10 +18,12 @@ add_action('elementor/widgets/register', function (Widgets_Manager $widgets_mana
     require_once HASSEL_COMPONENTS_PATH . 'widgets/button-stagger.php';
     require_once HASSEL_COMPONENTS_PATH . 'widgets/scaling-hamburger-navigation.php';
     require_once HASSEL_COMPONENTS_PATH . 'widgets/button-arrow-animated.php';
+    require_once HASSEL_COMPONENTS_PATH . 'widgets/bunny-hls-player.php';
 
     // === Register ===
     $widgets_manager->register(new \Hassel\Widgets\Button_Stagger());
     $widgets_manager->register(new \Hassel\Widgets\Scaling_Hamburger_Navigation());
     $widgets_manager->register(new \Hassel\Widgets\Button_Arrow_Animated());
+    $widgets_manager->register(new \Hassel\Widgets\Bunny_HLS_Player());
 
 }, 20);

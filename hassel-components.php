@@ -3,7 +3,7 @@
  * Plugin Name: Hassel Components for Elementor
  * Plugin URI: https://github.com/BericaEditrice/hassel-components
  * Description: Libreria di componenti Elementor sviluppata da Hassel Omnichannel.
- * Version: 1.2.03
+ * Version: 1.3.0
  * Author: Hassel Omnichannel
  * Author URI: https://hassel.it
  * Requires at least: 6.0
@@ -17,7 +17,7 @@ if (!defined('ABSPATH'))
     exit;
 
 // === Costanti ===
-define('HASSEL_COMPONENTS_VERSION', '1.2.03');
+define('HASSEL_COMPONENTS_VERSION', '1.3.0');
 define('HASSEL_COMPONENTS_PATH', plugin_dir_path(__FILE__));
 define('HASSEL_COMPONENTS_URL', plugin_dir_url(__FILE__));
 
@@ -117,6 +117,23 @@ add_action('plugins_loaded', function () {
         HASSEL_COMPONENTS_VERSION,
         true
     );
+
+    // === WIDGET: BUNNY HLS PLAYER ===
+    wp_register_style(
+        'hassel-bunny-hls-player-css',
+        HASSEL_COMPONENTS_URL . 'assets/css/bunny-hls-player.css',
+        [],
+        HASSEL_COMPONENTS_VERSION
+    );
+
+    wp_register_script(
+        'hassel-bunny-hls-player-js',
+        HASSEL_COMPONENTS_URL . 'assets/js/bunny-hls-player.js',
+        [],
+        HASSEL_COMPONENTS_VERSION,
+        true
+    );
+
 
     /**
      * =====================================================
