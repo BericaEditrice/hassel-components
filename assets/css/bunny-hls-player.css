@@ -1,23 +1,285 @@
-.hassel-bunny-hls.placeholder {
-  position: relative;
+/* Variabili tema */
+.bunny-player {
+  --hp-accent: #ff4c24;
+  --hp-icon: #fff;
+  --hp-overlay: 0.3;
+  --hp-play-size: 6em;
+  --hp-play-icon: 2em;
+}
+
+.bunny-player {
+  pointer-events: none;
+  color: var(--hp-icon);
+  isolation: isolate;
+  border-radius: 1em;
   width: 100%;
-  min-height: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transform: translateX(0);
+}
+
+/* Ratio spacer */
+.bunny-player__before {
+  padding-top: 62.5%;
+}
+
+/* Fadeables */
+[data-bunny-player-init]
+  :is(
+    .bunny-player__placeholder,
+    .bunny-player__dark,
+    .bunny-player__playpause,
+    .bunny-player__loading
+  ) {
+  transition:
+    opacity 0.3s linear,
+    visibility 0.3s linear;
+}
+
+.bunny-player__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+[data-bunny-player-init][data-player-status="playing"]
+  .bunny-player__placeholder,
+[data-bunny-player-init][data-player-status="paused"]
+  .bunny-player__placeholder,
+[data-bunny-player-init][data-player-activated="true"][data-player-status="ready"]
+  .bunny-player__placeholder {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Dark overlay */
+.bunny-player__dark {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0.1;
+}
+[data-bunny-player-init][data-player-status="paused"] .bunny-player__dark,
+[data-bunny-player-init][data-player-status="playing"][data-player-hover="active"]
+  .bunny-player__dark {
+  opacity: var(--hp-overlay);
+}
+[data-bunny-player-init][data-player-status="playing"] .bunny-player__dark {
+  opacity: 0;
+}
+
+.bunny-player__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Big play */
+.bunny-player__playpause {
+  pointer-events: auto;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.75rem;
-  background: #0b0b0b;
-  color: #fff;
+}
+.bunny-player__big-btn {
+  -webkit-backdrop-filter: blur(1em);
+  backdrop-filter: blur(1em);
+  background: var(--hp-play-bg, rgba(100, 100, 100, 0.2));
+  border: 1px solid var(--hp-play-border, rgba(255, 255, 255, 0.1));
+  width: var(--hp-play-size);
+  height: var(--hp-play-size);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--hp-play-size) / 3);
+}
+.bunny-player__pause-svg {
+  display: none;
+  width: var(--hp-play-icon);
+}
+.bunny-player__play-svg {
+  display: block;
+  width: var(--hp-play-icon);
+}
+
+/* Interface */
+.bunny-player__interface {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  transition: all 0.6s cubic-bezier(0.625, 0.05, 0, 1);
+}
+[data-bunny-player-init][data-player-status="playing"] .bunny-player__interface,
+[data-bunny-player-init][data-player-status="loading"]
+  .bunny-player__interface {
+  opacity: 0;
+  transform: translateY(1em) rotate(0.001deg);
+}
+[data-bunny-player-init][data-player-hover="active"] .bunny-player__interface {
+  opacity: 1;
+  transform: translateY(0) rotate(0.001deg);
+}
+
+.bunny-player__interface-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 25%;
+  background-image: linear-gradient(#0000, #000);
+  opacity: 0.5;
+}
+
+.bunny-player__interface-bottom {
+  pointer-events: auto;
+  position: relative;
+  width: 100%;
+  padding: min(2em, 4vw);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.bunny-player__toggle-playpause,
+.bunny-player__toggle-mute,
+.bunny-player__toggle-fullscreen {
+  width: 1.5em;
+  height: 1.5em;
+  cursor: pointer;
+}
+
+.bunny-player__text {
+  font-size: 0.9375em;
+  line-height: 1;
+  white-space: nowrap;
+  margin: 0;
+}
+.bunny-player__time {
+  display: flex;
+  gap: 0.125em;
+  width: 5.75em;
+  align-items: center;
+  justify-content: center;
+}
+.bunny-player__interface-btns {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.bunny-player__timeline {
+  flex: 1;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-inline: 0.5em;
+}
+.bunny-player__timeline-bar {
+  position: absolute;
+  inset-inline: 0;
+  height: 30%;
+  border-radius: 1em;
   overflow: hidden;
 }
-.hassel-bunny-hls__box {
-  opacity: 0.8;
-  text-align: center;
-  font:
-    500 14px/1.4 system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    Arial,
-    sans-serif;
+.bunny-player__timeline-bg {
+  position: absolute;
+  inset: 0;
+  background: #ffffff26;
+  border-radius: 1em;
+}
+.bunny-player__timeline-buffered {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0.2;
+  transform: translateX(-100%);
+}
+.bunny-player__timeline-progress {
+  position: absolute;
+  inset: 0;
+  background: var(--hp-accent);
+  transform: translateX(-100%);
+}
+.bunny-player__timeline-handle {
+  position: absolute;
+  top: 50%;
+  width: 1em;
+  height: 1em;
+  border-radius: 1em;
+  background: var(--hp-accent);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s ease-in-out;
+  pointer-events: none;
+}
+[data-bunny-player-init][data-timeline-drag="true"]
+  .bunny-player__timeline-handle {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Loading */
+.bunny-player__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00000054;
+  opacity: 0;
+  visibility: hidden;
+}
+[data-bunny-player-init][data-player-status="loading"] .bunny-player__loading {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Icon toggles */
+.bunny-player__volume-mute-svg {
+  display: none;
+}
+[data-bunny-player-init][data-player-muted="true"]
+  .bunny-player__volume-mute-svg {
+  display: block;
+}
+[data-bunny-player-init][data-player-muted="true"]
+  .bunny-player__volume-up-svg {
+  display: none;
+}
+
+.bunny-player__fullscreen-shrink-svg {
+  display: none;
+}
+[data-bunny-player-init][data-player-fullscreen="true"]
+  .bunny-player__fullscreen-shrink-svg {
+  display: block;
+}
+[data-bunny-player-init][data-player-fullscreen="true"]
+  .bunny-player__fullscreen-scale-svg {
+  display: none;
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .bunny-player {
+    --hp-overlay: 0.15;
+  }
+  .bunny-player * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
