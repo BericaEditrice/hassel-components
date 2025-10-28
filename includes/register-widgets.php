@@ -17,7 +17,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
     require_once HASSEL_COMPONENTS_PATH . 'widgets/button-stagger.php';
     require_once HASSEL_COMPONENTS_PATH . 'widgets/scaling-hamburger-navigation.php';
     require_once HASSEL_COMPONENTS_PATH . 'widgets/button-arrow-animated.php';
-    require_once HASSEL_COMPONENTS_PATH . 'widgets/bunny-hls-player.php';
+    // require_once HASSEL_COMPONENTS_PATH . 'widgets/bunny-hls-player.php';
 
     // === Register (safe) ===
     if (class_exists('\Hassel\Widgets\Button_Stagger')) {
@@ -30,7 +30,7 @@ add_action('elementor/widgets/register', function ($widgets_manager) {
         $widgets_manager->register(new \Hassel\Widgets\Button_Arrow_Animated());
     }
     if (class_exists('\Hassel\Widgets\Bunny_HLS_Player')) {
-        $widgets_manager->register(new \Hassel\Widgets\Bunny_HLS_Player());
+        // $widgets_manager->register(new \Hassel\Widgets\Bunny_HLS_Player());
     }
 
 }, 20);
