@@ -7,6 +7,14 @@
     var video = root.querySelector(".bunny-player__video");
     if (!video) return;
 
+    // 🔧 Failsafe: se il wrapper è 0x0, imposta una height calcolata (16:9)
+    try {
+      if (root.clientHeight === 0) {
+        var w = root.clientWidth || root.offsetWidth || 0;
+        if (w > 0) root.style.height = Math.round((w * 9) / 16) + "px";
+      }
+    } catch (e) {}
+
     var src = root.getAttribute("data-player-src") || "";
     var auto = root.getAttribute("data-player-autoplay") === "true";
     var muted = root.getAttribute("data-player-muted") === "true";

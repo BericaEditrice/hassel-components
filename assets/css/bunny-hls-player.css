@@ -13,17 +13,19 @@
   isolation: isolate;
   border-radius: 1em;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   position: relative;
   overflow: hidden;
   transform: translateX(0);
+  aspect-ratio: 16 / 9;
 }
 
 /* Ratio spacer */
 .bunny-player__before {
-  padding-top: 62.5%;
+  display: block;
+  width: 100%;
+  padding-top: 56.25%;
+  flex: 0 0 auto;
 }
 
 /* Fadeables */
