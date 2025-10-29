@@ -8,7 +8,7 @@
 }
 
 .bunny-player {
-  pointer-events: none;
+  pointer-events: auto;
   color: var(--hp-icon);
   isolation: isolate;
   border-radius: 1em;

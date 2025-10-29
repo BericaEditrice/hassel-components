@@ -132,16 +132,100 @@ class Bunny_HLS_Player extends Widget_Base
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        $this->add_group_control(\Elementor\Group_Control_Typography::get_type(), [
-            'name' => 'ui_typo',
-            'selector' => '{{WRAPPER}} .bunny-player__text',
+        /* ============= LAYOUT ============= */
+        $this->start_controls_section('layout', [
+            'label' => __('Layout', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        $this->add_control('accent', [
-            'label' => __('Colore accento (progress/handle)', 'hassel-components'),
+        $this->add_responsive_control('player_height', [
+            'label' => __('Altezza', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'vh', 'em', 'rem'],
+            'range' => ['px' => ['min' => 120, 'max' => 1200]],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => 'height: {{SIZE}}{{UNIT}};'],
+        ]);
+
+        $this->add_responsive_control('radius', [
+            'label' => __('Raggio bordo', 'hassel-components'),
+            'type' => Controls_Manager::DIMENSIONS,
+            'size_units' => ['px', '%', 'em', 'rem'],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
+        ]);
+
+        $this->add_group_control(\Elementor\Group_Control_Box_Shadow::get_type(), [
+            'name' => 'shadow',
+            'selector' => '{{WRAPPER}} .bunny-player',
+        ]);
+
+        $this->end_controls_section();
+
+        /* ============= PULSANTE PLAY ============= */
+        $this->start_controls_section('play_btn', [
+            'label' => __('Pulsante Play/Pause', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_responsive_control('play_size', [
+            'label' => __('Diametro cerchio', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 0, 'max' => 200]],
+            'default' => ['size' => 96, 'unit' => 'px'],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-size: {{SIZE}}{{UNIT}};'],
+        ]);
+
+        $this->add_responsive_control('play_icon', [
+            'label' => __('Dimensione icona', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 0, 'max' => 120]],
+            'default' => ['size' => 32, 'unit' => 'px'],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-icon: {{SIZE}}{{UNIT}};'],
+        ]);
+
+        $this->add_control('play_bg', [
+            'label' => __('Colore cerchio', 'hassel-components'),
             'type' => Controls_Manager::COLOR,
-            'default' => '#ff4c24',
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-accent: {{VALUE}};'],
+            'default' => 'rgba(100,100,100,.2)',
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-bg: {{VALUE}};'],
+        ]);
+
+        $this->add_control('play_border', [
+            'label' => __('Bordo cerchio', 'hassel-components'),
+            'type' => Controls_Manager::COLOR,
+            'default' => 'rgba(255,255,255,.1)',
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-border: {{VALUE}};'],
+        ]);
+
+        $this->end_controls_section();
+
+        /* ============= ACCESSIBILITÀ / BEHAVIOR ============= */
+        $this->start_controls_section('a11y', [
+            'label' => __('Accessibilità & Comportamento', 'hassel-components'),
+            'tab' => Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_control('overlay_opacity', [
+            'label' => __('Overlay scuro (in pausa)', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'range' => ['px' => ['min' => 0, 'max' => 1, 'step' => 0.05]],
+            'default' => ['size' => 0.3],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-overlay: {{SIZE}};'],
+        ]);
+
+        $this->add_control('reduce_motion', [
+            'label' => __('Riduci animazioni se prefers-reduced-motion', 'hassel-components'),
+            'type' => Controls_Manager::SWITCHER,
+            'return_value' => 'true',
+            'default' => 'true',
+        ]);
+
+        $this->add_control('kb_shortcuts', [
+            'label' => __('Abilita scorciatoie da tastiera (K/M/F)', 'hassel-components'),
+            'type' => Controls_Manager::SWITCHER,
+            'return_value' => 'true',
+            'default' => 'true',
         ]);
 
         $this->end_controls_section();

@@ -36,14 +36,21 @@
     };
 
     if (lazy === "true") {
-      // carica al primo click
-      root.addEventListener("click", function onFirst() {
-        root.removeEventListener("click", onFirst);
+      // carica al primo click sul container O sui bottoni di play
+      var firstLoad = function () {
+        root.removeEventListener("click", firstLoad);
+        playBtns.forEach(function (btn) {
+          btn.removeEventListener("click", firstLoad);
+        });
         loadSource();
         if (auto && muted) {
           video.muted = true;
           video.play().catch(() => {});
         }
+      };
+      root.addEventListener("click", firstLoad);
+      playBtns.forEach(function (btn) {
+        btn.addEventListener("click", firstLoad, { once: true });
       });
     } else {
       // eager o metadata
