@@ -308,7 +308,7 @@ class Bunny_HLS_Player extends Widget_Base
         // Pulsante centrale
         echo '  <div class="bunny-player__playpause" data-player-control="playpause" aria-label="' . esc_attr__('Play/Pause', 'hassel-components') . '" role="button" tabindex="0">';
         echo '    <div class="bunny-player__big-btn">';
-        echo '      <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/></svg>';
+        echo '      <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/><path d="M8 5V19" stroke="currentColor" stroke-width="3"/></svg>';
         echo '      <svg class="bunny-player__play-svg" viewBox="0 0 24 24"><path d="M6 12V5.01109C6 4.05131 7.03685 3.4496 7.87017 3.92579L14 7.42855L20.1007 10.9147C20.9405 11.3945 20.9405 12.6054 20.1007 13.0853L14 16.5714L7.87017 20.0742C7.03685 20.5503 6 19.9486 6 18.9889V12Z" fill="currentColor"/></svg>';
         echo '    </div>';
         echo '  </div>';
@@ -338,16 +338,17 @@ class Bunny_HLS_Player extends Widget_Base
                         <div class="bunny-player__timeline-handle" data-player-timeline-handle></div>
                       </div>';
 
-        echo '      <div class="bunny-player__interface-btns">
-                        <div class="bunny-player__toggle-mute" data-player-control="mute" aria-label="' . esc_attr__('Mute', 'hassel-components') . '" role="button" tabindex="0">
-                          <svg class="bunny-player__volume-up-svg" viewBox="0 0 24 24"><path d="M3 8.99998V15H7L12 20V3.99998L7 8.99998H3Z" fill="currentColor"/></svg>
-                          <svg class="bunny-player__volume-mute-svg" viewBox="0 0 24 24"><path d="M4.27 3L3 4.27L7.73 9H3V15H7L12 20V13.27L19.73 21L21 19.73L12 10.73L4.27 3Z" fill="currentColor"/></svg>
-                        </div>
-                        <div class="bunny-player__toggle-fullscreen" data-player-control="fullscreen" aria-label="' . esc_attr__('Fullscreen', 'hassel-components') . '" role="button" tabindex="0">
-                          <svg class="bunny-player__fullscreen-scale-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="2" fill="currentColor"/><rect x="14" y="3" width="7" height="2" fill="currentColor"/><rect x="3" y="19" width="7" height="2" fill="currentColor"/><rect x="14" y="19" width="7" height="2" fill="currentColor"/></svg>
-                          <svg class="bunny-player__fullscreen-shrink-svg" viewBox="0 0 24 24"><rect x="7" y="2" width="2" height="7" fill="currentColor"/><rect x="15" y="2" width="2" height="7" fill="currentColor"/></svg>
-                        </div>
-                      </div>';
+        echo '  <div class="bunny-player__interface-btns">
+          <div class="bunny-player__toggle-mute" data-player-control="mute" aria-label="' . esc_attr__('Mute', 'hassel-components') . '" role="button" tabindex="0">
+            <svg class="bunny-player__volume-up-svg" viewBox="0 0 24 24"><path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor"/></svg>
+            <svg class="bunny-player__volume-mute-svg" viewBox="0 0 24 24"><path d="M4.27 3L3 4.27L7.73 9H3V15H7L12 20V13.27L19.73 21L21 19.73L12 10.73L4.27 3Z" fill="currentColor"/></svg>
+          </div>
+          <input class="bunny-player__volume-range" type="range" min="0" max="1" step="0.01" value="1" aria-label="' . esc_attr__('Volume', 'hassel-components') . '">
+          <div class="bunny-player__toggle-fullscreen" data-player-control="fullscreen" aria-label="' . esc_attr__('Fullscreen', 'hassel-components') . '" role="button" tabindex="0">
+            <svg class="bunny-player__fullscreen-scale-svg" viewBox="0 0 24 24"><path d="M3 3h7v2H5v5H3V3zm14 0h7v7h-2V5h-5V3zM3 21v-7h2v5h5v2H3zm16-7h2v7h-7v-2h5v-5z" fill="currentColor"/></svg>
+            <svg class="bunny-player__fullscreen-shrink-svg" viewBox="0 0 24 24"><path d="M10 3v2H5v5H3V3h7zm11 0v7h-2V5h-5V3h7zM3 21v-7h2v5h5v2H3zm14-7h2v7h-7v-2h5v-5z" fill="currentColor"/></svg>
+          </div>
+        </div>';
 
         echo '    </div>'; // interface-bottom
         echo '  </div>';   // interface

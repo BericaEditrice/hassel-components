@@ -35,6 +35,9 @@ Installa il plugin [GitHub Updater](https://github.com/afragen/git-updater) e co
 
 == Changelog ==
 
+= 1.3.13 =
+* Bug Fix nuovo widget Bunny HSL Player
+
 = 1.3.12 =
 * Bug Fix nuovo widget Bunny HSL Player
 
