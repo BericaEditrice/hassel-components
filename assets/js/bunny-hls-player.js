@@ -1,6 +1,5 @@
 /* global Hls, elementorFrontend, jQuery */
 (function ($) {
-  // Inizializzazione base: attacca HLS al <video> leggendo i data-attrs
   function initBunnyPlayerRoot(root) {
     if (!root || root._hpInit) return;
     root._hpInit = true;
@@ -14,64 +13,67 @@
     var lazy = root.getAttribute("data-player-lazy") || "";
     var poster = root.querySelector(".bunny-player__placeholder");
 
-    // poster come poster nativo
-    if (poster && poster.src) {
-      video.setAttribute("poster", poster.src);
+    // poster nativo
+    if (poster && poster.src) video.setAttribute("poster", poster.src);
+
+    // --- helper: attiva UI (toglie il placeholder anche se è in "ready") ---
+    function activateUI() {
+      if (root.getAttribute("data-player-activated") !== "true") {
+        root.setAttribute("data-player-activated", "true");
+      }
     }
 
-    // Se lazy="true" aspetta interazione (click) per caricare
-    var loadSource = function () {
+    // --- carica sorgente HLS / nativa ---
+    function loadSource() {
       if (!src) return;
-      if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = src;
-      } else if (typeof Hls !== "undefined" && Hls.isSupported()) {
-        var hls = new Hls();
-        hls.loadSource(src);
-        hls.attachMedia(video);
-      } else {
-        // fallback: alcuni browser supportano mp4 ma non hls
-        video.src = src;
-      }
-      root.setAttribute("data-player-status", "ready");
-    };
-
-    if (lazy === "true") {
-      // carica al primo click sul container O sui bottoni di play
-      var firstLoad = function () {
-        root.removeEventListener("click", firstLoad);
-        playBtns.forEach(function (btn) {
-          btn.removeEventListener("click", firstLoad);
-        });
-        loadSource();
-        if (auto && muted) {
-          video.muted = true;
-          video.play().catch(() => {});
+      try {
+        if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          // Safari / nativo HLS
+          video.src = src;
+        } else if (typeof Hls !== "undefined" && Hls.isSupported()) {
+          var hls = new Hls({ lowLatencyMode: true });
+          hls.on(Hls.Events.ERROR, function (event, data) {
+            // se è fatale, prova fallback best-effort
+            if (data && data.fatal) {
+              try {
+                hls.destroy();
+              } catch (e) {}
+              video.src = src; // qualche CDN/browsers lo digeriscono comunque
+            }
+          });
+          hls.loadSource(src);
+          hls.attachMedia(video);
+        } else {
+          video.src = src; // fallback
         }
-      };
-      root.addEventListener("click", firstLoad);
-      playBtns.forEach(function (btn) {
-        btn.addEventListener("click", firstLoad, { once: true });
-      });
-    } else {
-      // eager o metadata
-      loadSource();
-      if (auto && muted) {
-        video.muted = true;
-        video.play().catch(() => {});
+        root.setAttribute("data-player-status", "ready");
+      } catch (e) {
+        // in caso di qualsiasi errore, siamo comunque "ready" per tentare play su click
+        root.setAttribute("data-player-status", "ready");
       }
     }
 
-    // Controls base
+    // --- bind bottoni ---
     var playBtns = root.querySelectorAll('[data-player-control="playpause"]');
+    function togglePlay(e) {
+      if (e) e.preventDefault();
+      activateUI(); // <— fondamentale per nascondere il placeholder in "ready"
+      if (video.paused) {
+        root.setAttribute("data-player-status", "loading");
+        // prova a partire non muto; se fallisce, riprova muto
+        video.play().catch(function () {
+          video.muted = true;
+          root.setAttribute("data-player-muted", "true");
+          return video.play().catch(function () {
+            /* lascia in pausa se ancora blocca */
+          });
+        });
+      } else {
+        video.pause();
+      }
+    }
     playBtns.forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (video.paused) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      });
+      btn.addEventListener("click", togglePlay);
     });
 
     var muteBtn = root.querySelector('[data-player-control="mute"]');
@@ -80,10 +82,30 @@
         e.preventDefault();
         video.muted = !video.muted;
         root.setAttribute("data-player-muted", String(video.muted));
+        activateUI();
       });
     }
 
-    // Hover UI
+    // --- lazy policy ---
+    if (lazy === "true") {
+      // carica al primo click sul container o sui bottoni
+      var firstLoad = function () {
+        root.removeEventListener("click", firstLoad);
+        playBtns.forEach(function (b) {
+          b.removeEventListener("click", firstLoad);
+        });
+        loadSource();
+      };
+      root.addEventListener("click", firstLoad);
+      playBtns.forEach(function (b) {
+        b.addEventListener("click", firstLoad, { once: true });
+      });
+    } else {
+      // eager / metadata
+      loadSource();
+    }
+
+    // --- hover UI ---
     root.addEventListener("mouseenter", function () {
       root.setAttribute("data-player-hover", "active");
     });
@@ -91,28 +113,36 @@
       root.setAttribute("data-player-hover", "idle");
     });
 
-    // Stato
+    // --- eventi video -> stato UI ---
     video.addEventListener("playing", function () {
       root.setAttribute("data-player-status", "playing");
+      activateUI();
     });
     video.addEventListener("pause", function () {
       root.setAttribute("data-player-status", "paused");
+      activateUI();
     });
     video.addEventListener("waiting", function () {
       root.setAttribute("data-player-status", "loading");
     });
     video.addEventListener("canplay", function () {
-      if (root.getAttribute("data-player-status") === "idle")
-        root.setAttribute("data-player-status", "ready");
+      // anche se resta in pausa, permetti di vedere il frame senza poster
+      activateUI();
+      if (auto && muted) {
+        video.muted = true;
+        video.play().catch(function () {
+          /* ok, resta in pausa fino a gesto utente */
+        });
+      }
     });
 
-    // Keyboard shortcuts (k/m/f)
+    // scorciatoie tastiera
     root.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
       if (e.key === "k" || e.code === "Space") {
         e.preventDefault();
-        playBtns[0]?.click();
+        togglePlay(e);
       }
       if (e.key === "m") {
         e.preventDefault();
@@ -131,12 +161,10 @@
       .forEach(initBunnyPlayerRoot);
   }
 
-  // Frontend page load
-  $(function () {
-    initAll();
-  });
+  // Frontend load
+  $(initAll);
 
-  // Elementor frontend (non editor-only)
+  // Elementor frontend hook
   $(window).on("elementor/frontend/init", function () {
     elementorFrontend.hooks.addAction(
       "frontend/element_ready/hassel_bunny_hls_player.default",
