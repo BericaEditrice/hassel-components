@@ -3,7 +3,7 @@
  * Plugin Name: Hassel Components for Elementor
  * Plugin URI: https://github.com/BericaEditrice/hassel-components
  * Description: Libreria di componenti Elementor sviluppata da Hassel Omnichannel.
- * Version: 1.3.06
+ * Version: 1.3.07
  * Author: Hassel Omnichannel
  * Author URI: https://hassel.it
  * Requires at least: 6.0
@@ -17,7 +17,7 @@ if (!defined('ABSPATH'))
     exit;
 
 // === Costanti ===
-define('HASSEL_COMPONENTS_VERSION', '1.3.06');
+define('HASSEL_COMPONENTS_VERSION', '1.3.07');
 define('HASSEL_COMPONENTS_PATH', plugin_dir_path(__FILE__));
 define('HASSEL_COMPONENTS_URL', plugin_dir_url(__FILE__));
 
@@ -97,17 +97,17 @@ function hassel_components_register_assets()
         true
     );
 
-    // === Bunny HLS Player (file names: bunny-hsl-player.* come nella tua struttura) ===
+    // === Bunny HLS Player (ATTENZIONE: 'hls' nei path, non 'hsl') ===
     wp_register_style(
         'hassel-bunny-hls-player-css',
-        HASSEL_COMPONENTS_URL . 'assets/css/bunny-hsl-player.css',
+        HASSEL_COMPONENTS_URL . 'assets/css/bunny-hls-player.css',
         [],
         HASSEL_COMPONENTS_VERSION
     );
     wp_register_script(
         'hassel-bunny-hls-player-js',
-        HASSEL_COMPONENTS_URL . 'assets/js/bunny-hsl-player.js',
-        ['hls-js'], // dipendenza fondamentale
+        HASSEL_COMPONENTS_URL . 'assets/js/bunny-hls-player.js',
+        ['jquery', 'elementor-frontend', 'hls-js'], // dipendenze corrette
         HASSEL_COMPONENTS_VERSION,
         true
     );
@@ -130,6 +130,7 @@ add_action('plugins_loaded', function () {
 
     // Registra gli asset anche nel contesto di Elementor (iframe editor/anteprima)
     add_action('elementor/frontend/after_register_scripts', 'hassel_components_register_assets', 9);
+    add_action('elementor/frontend/after_enqueue_styles', 'hassel_components_register_assets', 9);
 
     // Includes
     require_once HASSEL_COMPONENTS_PATH . 'includes/categories.php';

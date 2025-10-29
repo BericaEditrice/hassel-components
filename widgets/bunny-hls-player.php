@@ -5,8 +5,6 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Box_Shadow;
-use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Background;
 
 if (!defined('ABSPATH'))
     exit;
@@ -42,8 +40,7 @@ class Bunny_HLS_Player extends Widget_Base
 
     protected function register_controls()
     {
-
-        /* ============= CONTENUTO ============= */
+        // === CONTENUTO ===
         $this->start_controls_section('content', [
             'label' => __('Sorgente', 'hassel-components'),
             'tab' => Controls_Manager::TAB_CONTENT,
@@ -129,43 +126,13 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->end_controls_section();
 
-        /* ============= LAYOUT ============= */
-        $this->start_controls_section('layout', [
-            'label' => __('Layout', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_responsive_control('player_height', [
-            'label' => __('Altezza', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'vh', 'em', 'rem'],
-            'range' => ['px' => ['min' => 120, 'max' => 1200]],
-            'selectors' => ['{{WRAPPER}} .bunny-player' => 'height: {{SIZE}}{{UNIT}};'],
-        ]);
-
-        $this->add_responsive_control('radius', [
-            'label' => __('Raggio bordo', 'hassel-components'),
-            'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => ['px', '%', 'em', 'rem'],
-            'selectors' => [
-                '{{WRAPPER}} .bunny-player' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-            ],
-        ]);
-
-        $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
-            'name' => 'shadow',
-            'selector' => '{{WRAPPER}} .bunny-player',
-        ]);
-
-        $this->end_controls_section();
-
-        /* ============= STILE CONTROLLI/ TEMA ============= */
+        // === STYLE (ridotto: lascio solo ciò che usi nel CSS allegato) ===
         $this->start_controls_section('theme', [
             'label' => __('Tema & Controlli', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        $this->add_group_control(Group_Control_Typography::get_type(), [
+        $this->add_group_control(\Elementor\Group_Control_Typography::get_type(), [
             'name' => 'ui_typo',
             'selector' => '{{WRAPPER}} .bunny-player__text',
         ]);
@@ -175,83 +142,6 @@ class Bunny_HLS_Player extends Widget_Base
             'type' => Controls_Manager::COLOR,
             'default' => '#ff4c24',
             'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-accent: {{VALUE}};'],
-        ]);
-
-        $this->add_control('icon_color', [
-            'label' => __('Colore icone', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'default' => '#ffffff',
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-icon: {{VALUE}};'],
-        ]);
-
-        $this->add_control('overlay_opacity', [
-            'label' => __('Overlay scuro (in pausa)', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'range' => ['px' => ['min' => 0, 'max' => 1, 'step' => 0.05]],
-            'default' => ['size' => 0.3],
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-overlay: {{SIZE}};'],
-        ]);
-
-        $this->end_controls_section();
-
-        /* ============= PULSANTE PLAY ============= */
-        $this->start_controls_section('play_btn', [
-            'label' => __('Pulsante Play/Pause', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_responsive_control('play_size', [
-            'label' => __('Diametro cerchio', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 0, 'max' => 200]],
-            'default' => ['size' => 96, 'unit' => 'px'],
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-size: {{SIZE}}{{UNIT}};'],
-        ]);
-
-        $this->add_responsive_control('play_icon', [
-            'label' => __('Dimensione icona', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'em', 'rem'],
-            'range' => ['px' => ['min' => 0, 'max' => 120]],
-            'default' => ['size' => 32, 'unit' => 'px'],
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-icon: {{SIZE}}{{UNIT}};'],
-        ]);
-
-        $this->add_control('play_bg', [
-            'label' => __('Colore cerchio', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'default' => 'rgba(100,100,100,.2)',
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-bg: {{VALUE}};'],
-        ]);
-
-        $this->add_control('play_border', [
-            'label' => __('Bordo cerchio', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'default' => 'rgba(255,255,255,.1)',
-            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-border: {{VALUE}};'],
-        ]);
-
-        $this->end_controls_section();
-
-        /* ============= ACCESSIBILITÀ / BEHAVIOR ============= */
-        $this->start_controls_section('a11y', [
-            'label' => __('Accessibilità & Comportamento', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
-        ]);
-
-        $this->add_control('reduce_motion', [
-            'label' => __('Riduci animazioni se prefers-reduced-motion', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
-            'return_value' => 'true',
-            'default' => 'true',
-        ]);
-
-        $this->add_control('kb_shortcuts', [
-            'label' => __('Abilita scorciatoie da tastiera (K/M/F)', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
-            'return_value' => 'true',
-            'default' => 'true',
         ]);
 
         $this->end_controls_section();
@@ -264,22 +154,28 @@ class Bunny_HLS_Player extends Widget_Base
         $src = isset($s['src']['url']) ? esc_url($s['src']['url']) : '';
         $poster = isset($s['poster']['url']) ? esc_url($s['poster']['url']) : '';
         $lazy = $s['lazy'] ?? '';
-        $auto = ($s['autoplay'] === 'true') ? 'true' : 'false';
-        $muted = ($s['autoplay'] === 'true') ? 'true' : (($s['muted'] ?? '') === 'true' ? 'true' : 'false');
+        $auto = (!empty($s['autoplay']) && $s['autoplay'] === 'true') ? 'true' : 'false';
+        $muted = ($auto === 'true') ? 'true' : ((!empty($s['muted']) && $s['muted'] === 'true') ? 'true' : 'false');
         $aspect = $s['aspect_mode'] ?? 'true';
 
         $vtt = isset($s['vtt_url']['url']) ? esc_url($s['vtt_url']['url']) : '';
         $vtt_label = esc_attr($s['vtt_label'] ?? 'CC');
-        $vtt_default = ($s['vtt_default'] === 'true') ? ' default' : '';
+        $vtt_default = (!empty($s['vtt_default']) && $s['vtt_default'] === 'true') ? ' default' : '';
 
         $analytics = esc_attr($s['analytics_id'] ?? '');
 
-        // Wrapper con data-attributes letti dallo script
+        // Preload in base a "lazy"
+        $preload = 'auto';
+        if ($lazy === 'meta')
+            $preload = 'metadata';
+        if ($lazy === 'true')
+            $preload = 'none';
+
         echo '<div class="bunny-player" data-bunny-player-init 
                 data-player-src="' . esc_attr($src) . '"
                 data-player-autoplay="' . $auto . '"
                 data-player-muted="' . $muted . '"
-                data-player-update-size="' . $aspect . '"
+                data-player-update-size="' . esc_attr($aspect) . '"
                 data-player-lazy="' . esc_attr($lazy) . '"
                 data-player-status="idle"
                 data-player-activated="false"
@@ -289,7 +185,13 @@ class Bunny_HLS_Player extends Widget_Base
              >';
 
         echo '  <div data-player-before class="bunny-player__before"></div>';
-        echo '  <video class="bunny-player__video" playsinline preload="auto"></video>';
+
+        // VIDEO: qui inseriamo anche il <track> (se esiste) DENTRO al video
+        echo '  <video class="bunny-player__video" playsinline preload="' . esc_attr($preload) . '">';
+        if ($vtt) {
+            echo '<track kind="subtitles" srclang="en" label="' . $vtt_label . '" src="' . $vtt . '"' . $vtt_default . '>';
+        }
+        echo '  </video>';
 
         if ($poster) {
             echo '  <img class="bunny-player__placeholder" src="' . $poster . '" alt="">';
@@ -297,7 +199,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         echo '  <div class="bunny-player__dark"></div>';
 
-        // Pulsante centrale grande play/pause
+        // Pulsante centrale grande
         echo '  <div class="bunny-player__playpause" data-player-control="playpause" aria-label="' . esc_attr__('Play/Pause', 'hassel-components') . '" role="button" tabindex="0">';
         echo '    <div class="bunny-player__big-btn">';
         echo '      <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/><path d="M8 5V19" stroke="currentColor" stroke-width="3"/></svg>';
@@ -348,11 +250,6 @@ class Bunny_HLS_Player extends Widget_Base
         echo '  <div class="bunny-player__loading">
                   <svg class="bunny-player__loading-svg" viewBox="0 0 100 100" fill="none"><path fill="currentColor" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"></path><animateTransform attributeName="transform" type="rotate" dur="1s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/></svg>
                 </div>';
-
-        // Track VTT (se impostato)
-        if ($vtt) {
-            echo '<track kind="subtitles" srclang="en" label="' . $vtt_label . '" src="' . $vtt . '"' . $vtt_default . '>';
-        }
 
         echo '</div>'; // bunny-player
     }
