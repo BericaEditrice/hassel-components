@@ -5,8 +5,7 @@
   --hp-overlay: 0.3;
   --hp-play-size: 6em;
   --hp-play-icon: 2em;
-  /* verrà aggiornato via JS con videoWidth/videoHeight */
-  --hp-aspect: 16 / 9;
+  --hp-aspect: 16 / 9; /* aggiornato via JS con videoWidth/videoHeight */
 }
 
 /* Wrapper */
@@ -16,14 +15,14 @@
   isolation: isolate;
   border-radius: 1em;
   width: 100%;
-  display: block; /* no flex: evita collasso */
+  display: block; /* evita collasso */
   position: relative;
   overflow: hidden;
   transform: translateX(0);
   aspect-ratio: var(--hp-aspect);
 }
 
-/* Ratio spacer (fallback per browser senza aspect-ratio) */
+/* Fallback ratio (per browser senza aspect-ratio) */
 .bunny-player__before {
   display: block;
   width: 100%;
@@ -51,6 +50,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none; /* NON bloccare hover sul wrapper */
 }
 [data-bunny-player-init][data-player-status="playing"]
   .bunny-player__placeholder,
@@ -68,6 +68,7 @@
   inset: 0;
   background: #000;
   opacity: 0.1;
+  pointer-events: none; /* NON bloccare hover */
 }
 [data-bunny-player-init][data-player-status="paused"] .bunny-player__dark,
 [data-bunny-player-init][data-player-status="playing"][data-player-hover="active"]
@@ -87,7 +88,7 @@
   display: block;
 }
 
-/* Big play central */
+/* Big play */
 .bunny-player__playpause {
   pointer-events: auto;
   position: absolute;
@@ -110,7 +111,7 @@
   padding: calc(var(--hp-play-size) / 3);
 }
 
-/* Toggle play/pause: di default mostra play, in playing mostra pause */
+/* Toggle play/pause */
 .bunny-player__pause-svg,
 .bunny-player__play-svg {
   width: var(--hp-play-icon);
@@ -294,7 +295,7 @@
   display: none;
 }
 
-/* Slider volume */
+/* Slider volume (thumb usa --hp-accent modificabile da Elementor) */
 .bunny-player__volume-range {
   width: 80px;
   appearance: none;

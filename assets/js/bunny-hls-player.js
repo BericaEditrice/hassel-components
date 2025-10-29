@@ -1,5 +1,6 @@
 /* global Hls, elementorFrontend, jQuery */
 (function ($) {
+  /* ---------- helpers ---------- */
   function fmt(t) {
     if (!isFinite(t) || t < 0) t = 0;
     var m = Math.floor(t / 60),
@@ -14,6 +15,7 @@
     if (d.fullscreenElement && d.exitFullscreen) return d.exitFullscreen();
   }
 
+  /* ---------- init per singolo widget ---------- */
   function initBunnyPlayerRoot(root) {
     if (!root || root._hpInit) return;
     root._hpInit = true;
@@ -25,7 +27,8 @@
     var auto = root.getAttribute("data-player-autoplay") === "true";
     var muted = root.getAttribute("data-player-muted") === "true";
     var lazy = root.getAttribute("data-player-lazy") || "";
-    var poster = root.querySelector(".bunny-player__placeholder");
+
+    var posterImg = root.querySelector(".bunny-player__placeholder");
 
     var btnsPlay = root.querySelectorAll('[data-player-control="playpause"]');
     var btnMute = root.querySelector('[data-player-control="mute"]');
@@ -39,22 +42,22 @@
     var $handle = root.querySelector("[data-player-timeline-handle]");
     var $vol = root.querySelector(".bunny-player__volume-range");
 
-    // Poster nativo
-    if (poster && poster.src) video.setAttribute("poster", poster.src);
+    // poster nativo
+    if (posterImg && posterImg.src) video.setAttribute("poster", posterImg.src);
 
-    // Wrapper height failsafe (se qualche stile esterno lo schiaccia)
+    // failsafe altezza se qualche stile esterno collassa il wrapper
     if (root.clientHeight === 0) {
       var w = root.clientWidth || root.offsetWidth || 0;
       if (w > 0) root.style.height = Math.round((w * 9) / 16) + "px";
     }
 
     function activateUI() {
-      if (root.getAttribute("data-player-activated") !== "true")
+      if (root.getAttribute("data-player-activated") !== "true") {
         root.setAttribute("data-player-activated", "true");
+      }
     }
 
     function setAspectFromMeta() {
-      // imposta l'aspect-ratio dalla size reale del video
       var vw = video.videoWidth,
         vh = video.videoHeight;
       if (vw && vh) {
@@ -66,24 +69,26 @@
       if (!src) return;
       try {
         if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          // Safari / iOS nativo
           video.src = src;
         } else if (typeof Hls !== "undefined" && Hls.isSupported()) {
           var hls = new Hls({ lowLatencyMode: true });
-          hls.on(Hls.Events.ERROR, function (e, data) {
+          hls.on(Hls.Events.ERROR, function (_e, data) {
+            // fallback best-effort se errore fatale
             if (data && data.fatal) {
               try {
                 hls.destroy();
-              } catch (_) {}
+              } catch (e) {}
               video.src = src;
             }
           });
           hls.loadSource(src);
           hls.attachMedia(video);
         } else {
-          video.src = src;
+          video.src = src; // ultimo tentativo
         }
         root.setAttribute("data-player-status", "ready");
-      } catch (_) {
+      } catch (e) {
         root.setAttribute("data-player-status", "ready");
       }
     }
@@ -92,15 +97,16 @@
       activateUI();
       root.setAttribute("data-player-status", "loading");
       return video.play().catch(function () {
+        // riprova muto se bloccato
         video.muted = true;
         root.setAttribute("data-player-muted", "true");
         return video.play().catch(function () {
-          /* resta in pausa */
+          // resta in pausa se ancora bloccato
         });
       });
     }
 
-    // Bind pulsanti
+    /* --- bind controlli --- */
     btnsPlay.forEach(function (b) {
       b.addEventListener("click", function (e) {
         e.preventDefault();
@@ -118,24 +124,34 @@
       });
     }
 
+    if ($vol) {
+      // iniziale
+      try {
+        $vol.value = String(video.volume || 1);
+      } catch (e) {}
+      $vol.addEventListener("input", function () {
+        var v = Math.min(1, Math.max(0, parseFloat(this.value)));
+        video.volume = v;
+        video.muted = v === 0;
+        root.setAttribute("data-player-muted", String(video.muted));
+      });
+    }
+
     if (btnFs) {
       btnFs.addEventListener("click", function (e) {
         e.preventDefault();
         toggleFullscreen(root);
       });
     }
+    // sync icona fullscreen
+    document.addEventListener("fullscreenchange", function () {
+      var on = !!document.fullscreenElement;
+      root.setAttribute("data-player-fullscreen", String(on));
+    });
 
-    // Volume slider
-    if ($vol) {
-      $vol.addEventListener("input", function () {
-        video.volume = Math.min(1, Math.max(0, parseFloat(this.value)));
-        video.muted = video.volume === 0;
-        root.setAttribute("data-player-muted", String(video.muted));
-      });
-    }
-
-    // Lazy policy
+    /* --- lazy policy --- */
     if (lazy === "true") {
+      // carica al primo gesto
       var firstLoad = function () {
         root.removeEventListener("click", firstLoad);
         btnsPlay.forEach(function (b) {
@@ -148,44 +164,55 @@
         b.addEventListener("click", firstLoad, { once: true });
       });
     } else {
+      // eager / metadata
       loadSource();
     }
 
-    // Attiva UI su qualsiasi gesto
+    // attiva UI su qualsiasi gesto (così l'overlay e i controlli compaiono anche senza click)
     var activateOnGesture = function () {
       activateUI();
     };
     root.addEventListener("click", activateOnGesture);
     root.addEventListener("touchstart", activateOnGesture, { passive: true });
 
-    // Eventi video → stato UI
+    /* --- eventi video → UI --- */
     video.addEventListener("loadedmetadata", function () {
       setAspectFromMeta();
-      $durTxt && ($durTxt.textContent = fmt(video.duration));
+      if ($durTxt) $durTxt.textContent = fmt(video.duration);
     });
+
     video.addEventListener("canplay", function () {
       activateUI();
-      if (auto && muted) {
+      if (auto && (muted || video.muted)) {
         video.muted = true;
         doPlay();
       }
     });
+
     video.addEventListener("playing", function () {
       root.setAttribute("data-player-status", "playing");
       activateUI();
     });
+
     video.addEventListener("pause", function () {
       root.setAttribute("data-player-status", "paused");
       activateUI();
     });
+
     video.addEventListener("waiting", function () {
       root.setAttribute("data-player-status", "loading");
     });
 
-    // Timeline: progress + buffered
+    video.addEventListener("ended", function () {
+      // porta la barra a 100%
+      if ($bar) $bar.style.width = "100%";
+      if ($handle) $handle.style.transform = "translate(100%, -50%)";
+    });
+
+    // progress + buffered
     video.addEventListener("timeupdate", function () {
-      $progTxt && ($progTxt.textContent = fmt(video.currentTime));
-      if ($bar && video.duration) {
+      if ($progTxt) $progTxt.textContent = fmt(video.currentTime);
+      if ($bar && isFinite(video.duration) && video.duration > 0) {
         var pct = Math.max(
           0,
           Math.min(100, (video.currentTime / video.duration) * 100)
@@ -196,41 +223,53 @@
     });
 
     video.addEventListener("progress", function () {
-      if (!$buff || !video.buffered || !video.duration) return;
+      if (
+        !$buff ||
+        !video.buffered ||
+        !isFinite(video.duration) ||
+        video.duration <= 0
+      )
+        return;
       try {
         var end = video.buffered.length
           ? video.buffered.end(video.buffered.length - 1)
           : 0;
         var pct = Math.max(0, Math.min(100, (end / video.duration) * 100));
         $buff.style.width = pct + "%";
-      } catch (_) {}
+      } catch (e) {}
     });
 
-    // Seek con click/drag
+    // seek click/drag
     if ($track) {
       var dragging = false;
+
       function pctFromEvent(ev) {
         var rect = $track.getBoundingClientRect();
         var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
         return Math.max(0, Math.min(1, x / rect.width));
       }
+
       function seek(ev) {
-        if (!video.duration) return;
+        if (!isFinite(video.duration) || video.duration <= 0) return;
         var pct = pctFromEvent(ev);
         video.currentTime = pct * video.duration;
       }
+
       $track.addEventListener("mousedown", function (ev) {
         dragging = true;
+        root.setAttribute("data-timeline-drag", "true");
         seek(ev);
       });
       $track.addEventListener(
         "touchstart",
         function (ev) {
           dragging = true;
+          root.setAttribute("data-timeline-drag", "true");
           seek(ev);
         },
         { passive: true }
       );
+
       window.addEventListener("mousemove", function (ev) {
         if (dragging) seek(ev);
       });
@@ -241,15 +280,27 @@
         },
         { passive: true }
       );
-      window.addEventListener("mouseup", function () {
-        dragging = false;
-      });
-      window.addEventListener("touchend", function () {
-        dragging = false;
-      });
+
+      function endDrag() {
+        if (dragging) {
+          dragging = false;
+          root.setAttribute("data-timeline-drag", "false");
+        }
+      }
+      window.addEventListener("mouseup", endDrag);
+      window.addEventListener("touchend", endDrag);
+      window.addEventListener("touchcancel", endDrag);
     }
 
-    // Keyboard shortcuts
+    // hover UI
+    root.addEventListener("mouseenter", function () {
+      root.setAttribute("data-player-hover", "active");
+    });
+    root.addEventListener("mouseleave", function () {
+      root.setAttribute("data-player-hover", "idle");
+    });
+
+    // scorciatoie tastiera
     root.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
