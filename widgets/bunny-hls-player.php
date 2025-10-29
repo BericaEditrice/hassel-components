@@ -40,28 +40,29 @@ class Bunny_HLS_Player extends Widget_Base
 
     protected function register_controls()
     {
-        // === CONTENUTO ===
+
+        /* ============= CONTENUTO ============= */
         $this->start_controls_section('content', [
             'label' => __('Sorgente', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_CONTENT,
+            'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
         ]);
 
         $this->add_control('src', [
             'label' => __('URL .m3u8 (Bunny HLS)', 'hassel-components'),
-            'type' => Controls_Manager::URL,
+            'type' => \Elementor\Controls_Manager::URL,
             'dynamic' => ['active' => true],
             'placeholder' => 'https://....m3u8',
         ]);
 
         $this->add_control('poster', [
             'label' => __('Poster', 'hassel-components'),
-            'type' => Controls_Manager::MEDIA,
+            'type' => \Elementor\Controls_Manager::MEDIA,
             'dynamic' => ['active' => true],
         ]);
 
         $this->add_control('autoplay', [
             'label' => __('Autoplay (muted/loop)', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
+            'type' => \Elementor\Controls_Manager::SWITCHER,
             'return_value' => 'true',
             'default' => '',
             'description' => __('Per policy browser l’autoplay parte silenziato.', 'hassel-components'),
@@ -69,7 +70,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('muted', [
             'label' => __('Avvia silenziato', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
+            'type' => \Elementor\Controls_Manager::SWITCHER,
             'return_value' => 'true',
             'default' => 'false',
             'condition' => ['autoplay!' => 'true'],
@@ -77,7 +78,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('lazy', [
             'label' => __('Lazy load', 'hassel-components'),
-            'type' => Controls_Manager::SELECT,
+            'type' => \Elementor\Controls_Manager::SELECT,
             'default' => 'meta',
             'options' => [
                 '' => __('No (eager)', 'hassel-components'),
@@ -88,7 +89,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('aspect_mode', [
             'label' => __('Gestione rapporto', 'hassel-components'),
-            'type' => Controls_Manager::SELECT,
+            'type' => \Elementor\Controls_Manager::SELECT,
             'default' => 'true',
             'options' => [
                 'true' => __('Calcola da metadati', 'hassel-components'),
@@ -98,21 +99,21 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('vtt_url', [
             'label' => __('Sottotitoli .vtt (opzionale)', 'hassel-components'),
-            'type' => Controls_Manager::URL,
+            'type' => \Elementor\Controls_Manager::URL,
             'dynamic' => ['active' => true],
             'placeholder' => 'https://.../subtitles.vtt',
         ]);
 
         $this->add_control('vtt_label', [
             'label' => __('Etichetta sottotitoli', 'hassel-components'),
-            'type' => Controls_Manager::TEXT,
+            'type' => \Elementor\Controls_Manager::TEXT,
             'default' => 'CC',
             'condition' => ['vtt_url[url]!' => ''],
         ]);
 
         $this->add_control('vtt_default', [
             'label' => __('Sottotitoli attivi di default', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
+            'type' => \Elementor\Controls_Manager::SWITCHER,
             'return_value' => 'true',
             'default' => '',
             'condition' => ['vtt_url[url]!' => ''],
@@ -120,27 +121,43 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('analytics_id', [
             'label' => __('Analytics ID (facoltativo)', 'hassel-components'),
-            'type' => Controls_Manager::TEXT,
+            'type' => \Elementor\Controls_Manager::TEXT,
             'placeholder' => 'video-hero-home',
         ]);
 
-        $this->end_controls_section();
+        $this->end_controls_section(); // END content
 
-        // === STYLE (ridotto: lascio solo ciò che usi nel CSS allegato) ===
+
+        /* ============= TEMA & CONTROLLI ============= */
         $this->start_controls_section('theme', [
             'label' => __('Tema & Controlli', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
+
+        $this->add_group_control(\Elementor\Group_Control_Typography::get_type(), [
+            'name' => 'ui_typo',
+            'selector' => '{{WRAPPER}} .bunny-player__text',
+        ]);
+
+        $this->add_control('accent', [
+            'label' => __('Colore accento (progress/handle)', 'hassel-components'),
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'default' => '#ff4c24',
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-accent: {{VALUE}};'],
+        ]);
+
+        $this->end_controls_section(); // END theme
+
 
         /* ============= LAYOUT ============= */
         $this->start_controls_section('layout', [
             'label' => __('Layout', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_responsive_control('player_height', [
             'label' => __('Altezza', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
+            'type' => \Elementor\Controls_Manager::SLIDER,
             'size_units' => ['px', 'vh', 'em', 'rem'],
             'range' => ['px' => ['min' => 120, 'max' => 1200]],
             'selectors' => ['{{WRAPPER}} .bunny-player' => 'height: {{SIZE}}{{UNIT}};'],
@@ -148,7 +165,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_responsive_control('radius', [
             'label' => __('Raggio bordo', 'hassel-components'),
-            'type' => Controls_Manager::DIMENSIONS,
+            'type' => \Elementor\Controls_Manager::DIMENSIONS,
             'size_units' => ['px', '%', 'em', 'rem'],
             'selectors' => ['{{WRAPPER}} .bunny-player' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
         ]);
@@ -158,17 +175,18 @@ class Bunny_HLS_Player extends Widget_Base
             'selector' => '{{WRAPPER}} .bunny-player',
         ]);
 
-        $this->end_controls_section();
+        $this->end_controls_section(); // END layout
+
 
         /* ============= PULSANTE PLAY ============= */
         $this->start_controls_section('play_btn', [
             'label' => __('Pulsante Play/Pause', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_responsive_control('play_size', [
             'label' => __('Diametro cerchio', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
+            'type' => \Elementor\Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
             'range' => ['px' => ['min' => 0, 'max' => 200]],
             'default' => ['size' => 96, 'unit' => 'px'],
@@ -177,7 +195,7 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_responsive_control('play_icon', [
             'label' => __('Dimensione icona', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
+            'type' => \Elementor\Controls_Manager::SLIDER,
             'size_units' => ['px', 'em', 'rem'],
             'range' => ['px' => ['min' => 0, 'max' => 120]],
             'default' => ['size' => 32, 'unit' => 'px'],
@@ -186,29 +204,30 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('play_bg', [
             'label' => __('Colore cerchio', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
+            'type' => \Elementor\Controls_Manager::COLOR,
             'default' => 'rgba(100,100,100,.2)',
             'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-bg: {{VALUE}};'],
         ]);
 
         $this->add_control('play_border', [
             'label' => __('Bordo cerchio', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
+            'type' => \Elementor\Controls_Manager::COLOR,
             'default' => 'rgba(255,255,255,.1)',
             'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-border: {{VALUE}};'],
         ]);
 
-        $this->end_controls_section();
+        $this->end_controls_section(); // END play_btn
 
-        /* ============= ACCESSIBILITÀ / BEHAVIOR ============= */
+
+        /* ============= ACCESSIBILITÀ / COMPORTAMENTO ============= */
         $this->start_controls_section('a11y', [
             'label' => __('Accessibilità & Comportamento', 'hassel-components'),
-            'tab' => Controls_Manager::TAB_STYLE,
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_control('overlay_opacity', [
             'label' => __('Overlay scuro (in pausa)', 'hassel-components'),
-            'type' => Controls_Manager::SLIDER,
+            'type' => \Elementor\Controls_Manager::SLIDER,
             'range' => ['px' => ['min' => 0, 'max' => 1, 'step' => 0.05]],
             'default' => ['size' => 0.3],
             'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-overlay: {{SIZE}};'],
@@ -216,20 +235,21 @@ class Bunny_HLS_Player extends Widget_Base
 
         $this->add_control('reduce_motion', [
             'label' => __('Riduci animazioni se prefers-reduced-motion', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
+            'type' => \Elementor\Controls_Manager::SWITCHER,
             'return_value' => 'true',
             'default' => 'true',
         ]);
 
         $this->add_control('kb_shortcuts', [
             'label' => __('Abilita scorciatoie da tastiera (K/M/F)', 'hassel-components'),
-            'type' => Controls_Manager::SWITCHER,
+            'type' => \Elementor\Controls_Manager::SWITCHER,
             'return_value' => 'true',
             'default' => 'true',
         ]);
 
-        $this->end_controls_section();
+        $this->end_controls_section(); // END a11y
     }
+
 
     protected function render()
     {
