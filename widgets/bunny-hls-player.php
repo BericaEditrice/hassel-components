@@ -12,7 +12,6 @@ if (!defined('ABSPATH'))
 class Bunny_HLS_Player extends Widget_Base
 {
 
-    /* ===== Meta widget ===== */
     public function get_name()
     {
         return 'hassel_bunny_hls_player';
@@ -39,7 +38,6 @@ class Bunny_HLS_Player extends Widget_Base
         return ['hassel-bunny-hls-player-js'];
     }
 
-    /* ===== Pannello controlli ===== */
     protected function register_controls()
     {
 
@@ -252,7 +250,6 @@ class Bunny_HLS_Player extends Widget_Base
         $this->end_controls_section(); // END a11y
     }
 
-    /* ===== Output frontend ===== */
     protected function render()
     {
         $s = $this->get_settings_for_display();
@@ -270,7 +267,6 @@ class Bunny_HLS_Player extends Widget_Base
 
         $analytics = esc_attr($s['analytics_id'] ?? '');
 
-        // Preload in base a "lazy"
         $preload = 'auto';
         if ($lazy === 'meta')
             $preload = 'metadata';
@@ -292,7 +288,6 @@ class Bunny_HLS_Player extends Widget_Base
 
         echo '  <div data-player-before class="bunny-player__before"></div>';
 
-        // VIDEO (con track dentro)
         echo '  <video class="bunny-player__video" playsinline preload="' . esc_attr($preload) . '" crossorigin="anonymous">';
         if ($vtt) {
             echo '<track kind="subtitles" srclang="en" label="' . $vtt_label . '" src="' . $vtt . '"' . $vtt_default . '>';
@@ -318,8 +313,9 @@ class Bunny_HLS_Player extends Widget_Base
         echo '    <div class="bunny-player__interface-fade"></div>';
         echo '    <div class="bunny-player__interface-bottom">';
 
+        // toggle play/pause secondario (stessi SVG del centrale)
         echo '      <div class="bunny-player__toggle-playpause" data-player-control="playpause" aria-label="' . esc_attr__('Play/Pause', 'hassel-components') . '" role="button" tabindex="0">';
-        echo '        <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/></svg>';
+        echo '        <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/><path d="M8 5V19" stroke="currentColor" stroke-width="3"/></svg>';
         echo '        <svg class="bunny-player__play-svg" viewBox="0 0 24 24"><path d="M6 12V5.01109C6 4.05131 7.03685 3.4496 7.87017 3.92579L14 7.42855L20.1007 10.9147C20.9405 11.3945 20.9405 12.6054 20.1007 13.0853L14 16.5714L7.87017 20.0742C7.03685 20.5503 6 19.9486 6 18.9889V12Z" fill="currentColor"/></svg>';
         echo '      </div>';
 
@@ -338,17 +334,21 @@ class Bunny_HLS_Player extends Widget_Base
                         <div class="bunny-player__timeline-handle" data-player-timeline-handle></div>
                       </div>';
 
-        echo '  <div class="bunny-player__interface-btns">
-          <div class="bunny-player__toggle-mute" data-player-control="mute" aria-label="' . esc_attr__('Mute', 'hassel-components') . '" role="button" tabindex="0">
-            <svg class="bunny-player__volume-up-svg" viewBox="0 0 24 24"><path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor"/></svg>
-            <svg class="bunny-player__volume-mute-svg" viewBox="0 0 24 24"><path d="M4.27 3L3 4.27L7.73 9H3V15H7L12 20V13.27L19.73 21L21 19.73L12 10.73L4.27 3Z" fill="currentColor"/></svg>
-          </div>
-          <input class="bunny-player__volume-range" type="range" min="0" max="1" step="0.01" value="1" aria-label="' . esc_attr__('Volume', 'hassel-components') . '">
-          <div class="bunny-player__toggle-fullscreen" data-player-control="fullscreen" aria-label="' . esc_attr__('Fullscreen', 'hassel-components') . '" role="button" tabindex="0">
-            <svg class="bunny-player__fullscreen-scale-svg" viewBox="0 0 24 24"><path d="M3 3h7v2H5v5H3V3zm14 0h7v7h-2V5h-5V3zM3 21v-7h2v5h5v2H3zm16-7h2v7h-7v-2h5v-5z" fill="currentColor"/></svg>
-            <svg class="bunny-player__fullscreen-shrink-svg" viewBox="0 0 24 24"><path d="M10 3v2H5v5H3V3h7zm11 0v7h-2V5h-5V3h7zM3 21v-7h2v5h5v2H3zm14-7h2v7h-7v-2h5v-5z" fill="currentColor"/></svg>
-          </div>
-        </div>';
+        echo '      <div class="bunny-player__interface-btns">
+                        <div class="bunny-player__toggle-mute" data-player-control="mute" aria-label="' . esc_attr__('Mute', 'hassel-components') . '" role="button" tabindex="0">
+                          <svg class="bunny-player__volume-up-svg" viewBox="0 0 24 24"><path d="M3 9V15H7L12 20V4L7 9H3Z" fill="currentColor"/></svg>
+                          <svg class="bunny-player__volume-mute-svg" viewBox="0 0 24 24"><path d="M4.27 3L3 4.27L7.73 9H3V15H7L12 20V13.27L19.73 21L21 19.73L12 10.73L4.27 3Z" fill="currentColor"/></svg>
+                        </div>
+                        <input class="bunny-player__volume-range" type="range" min="0" max="1" step="0.01" value="1" aria-label="' . esc_attr__('Volume', 'hassel-components') . '">
+                        <div class="bunny-player__toggle-fullscreen" data-player-control="fullscreen" aria-label="' . esc_attr__('Fullscreen', 'hassel-components') . '" role="button" tabindex="0">
+                          <svg class="bunny-player__fullscreen-scale-svg" viewBox="0 0 24 24">
+                            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                          <svg class="bunny-player__fullscreen-shrink-svg" viewBox="0 0 24 24">
+                            <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                        </div>
+                      </div>';
 
         echo '    </div>'; // interface-bottom
         echo '  </div>';   // interface

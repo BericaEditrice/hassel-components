@@ -1,13 +1,11 @@
 /* global Hls, elementorFrontend, jQuery */
 (function ($) {
-  /* ---------- helpers ---------- */
   function fmt(t) {
     if (!isFinite(t) || t < 0) t = 0;
     var m = Math.floor(t / 60),
       s = Math.floor(t % 60);
     return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
   }
-
   function toggleFullscreen(el) {
     var d = document;
     if (!d.fullscreenElement && el.requestFullscreen)
@@ -15,7 +13,6 @@
     if (d.fullscreenElement && d.exitFullscreen) return d.exitFullscreen();
   }
 
-  /* ---------- init per singolo widget ---------- */
   function initBunnyPlayerRoot(root) {
     if (!root || root._hpInit) return;
     root._hpInit = true;
@@ -42,10 +39,8 @@
     var $handle = root.querySelector("[data-player-timeline-handle]");
     var $vol = root.querySelector(".bunny-player__volume-range");
 
-    // poster nativo
     if (posterImg && posterImg.src) video.setAttribute("poster", posterImg.src);
 
-    // failsafe altezza se qualche stile esterno collassa il wrapper
     if (root.clientHeight === 0) {
       var w = root.clientWidth || root.offsetWidth || 0;
       if (w > 0) root.style.height = Math.round((w * 9) / 16) + "px";
@@ -56,25 +51,19 @@
         root.setAttribute("data-player-activated", "true");
       }
     }
-
     function setAspectFromMeta() {
       var vw = video.videoWidth,
         vh = video.videoHeight;
-      if (vw && vh) {
-        root.style.setProperty("--hp-aspect", vw + " / " + vh);
-      }
+      if (vw && vh) root.style.setProperty("--hp-aspect", vw + " / " + vh);
     }
-
     function loadSource() {
       if (!src) return;
       try {
         if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          // Safari / iOS nativo
           video.src = src;
         } else if (typeof Hls !== "undefined" && Hls.isSupported()) {
           var hls = new Hls({ lowLatencyMode: true });
           hls.on(Hls.Events.ERROR, function (_e, data) {
-            // fallback best-effort se errore fatale
             if (data && data.fatal) {
               try {
                 hls.destroy();
@@ -85,28 +74,23 @@
           hls.loadSource(src);
           hls.attachMedia(video);
         } else {
-          video.src = src; // ultimo tentativo
+          video.src = src;
         }
         root.setAttribute("data-player-status", "ready");
       } catch (e) {
         root.setAttribute("data-player-status", "ready");
       }
     }
-
     function doPlay() {
       activateUI();
       root.setAttribute("data-player-status", "loading");
       return video.play().catch(function () {
-        // riprova muto se bloccato
         video.muted = true;
         root.setAttribute("data-player-muted", "true");
-        return video.play().catch(function () {
-          // resta in pausa se ancora bloccato
-        });
+        return video.play().catch(function () {});
       });
     }
 
-    /* --- bind controlli --- */
     btnsPlay.forEach(function (b) {
       b.addEventListener("click", function (e) {
         e.preventDefault();
@@ -114,7 +98,6 @@
         else video.pause();
       });
     });
-
     if (btnMute) {
       btnMute.addEventListener("click", function (e) {
         e.preventDefault();
@@ -123,9 +106,7 @@
         activateUI();
       });
     }
-
     if ($vol) {
-      // iniziale
       try {
         $vol.value = String(video.volume || 1);
       } catch (e) {}
@@ -136,22 +117,18 @@
         root.setAttribute("data-player-muted", String(video.muted));
       });
     }
-
     if (btnFs) {
       btnFs.addEventListener("click", function (e) {
         e.preventDefault();
         toggleFullscreen(root);
       });
     }
-    // sync icona fullscreen
     document.addEventListener("fullscreenchange", function () {
       var on = !!document.fullscreenElement;
       root.setAttribute("data-player-fullscreen", String(on));
     });
 
-    /* --- lazy policy --- */
     if (lazy === "true") {
-      // carica al primo gesto
       var firstLoad = function () {
         root.removeEventListener("click", firstLoad);
         btnsPlay.forEach(function (b) {
@@ -164,23 +141,19 @@
         b.addEventListener("click", firstLoad, { once: true });
       });
     } else {
-      // eager / metadata
       loadSource();
     }
 
-    // attiva UI su qualsiasi gesto (così l'overlay e i controlli compaiono anche senza click)
     var activateOnGesture = function () {
       activateUI();
     };
     root.addEventListener("click", activateOnGesture);
     root.addEventListener("touchstart", activateOnGesture, { passive: true });
 
-    /* --- eventi video → UI --- */
     video.addEventListener("loadedmetadata", function () {
       setAspectFromMeta();
       if ($durTxt) $durTxt.textContent = fmt(video.duration);
     });
-
     video.addEventListener("canplay", function () {
       activateUI();
       if (auto && (muted || video.muted)) {
@@ -188,40 +161,33 @@
         doPlay();
       }
     });
-
     video.addEventListener("playing", function () {
       root.setAttribute("data-player-status", "playing");
       activateUI();
     });
-
     video.addEventListener("pause", function () {
       root.setAttribute("data-player-status", "paused");
       activateUI();
     });
-
     video.addEventListener("waiting", function () {
       root.setAttribute("data-player-status", "loading");
     });
-
     video.addEventListener("ended", function () {
-      // porta la barra a 100%
       if ($bar) $bar.style.width = "100%";
-      if ($handle) $handle.style.transform = "translate(100%, -50%)";
+      if ($handle) $handle.style.left = "100%";
     });
 
-    // progress + buffered
     video.addEventListener("timeupdate", function () {
       if ($progTxt) $progTxt.textContent = fmt(video.currentTime);
-      if ($bar && isFinite(video.duration) && video.duration > 0) {
+      if (isFinite(video.duration) && video.duration > 0) {
         var pct = Math.max(
           0,
           Math.min(100, (video.currentTime / video.duration) * 100)
         );
-        $bar.style.width = pct + "%";
-        if ($handle) $handle.style.transform = "translate(" + pct + "%, -50%)";
+        if ($bar) $bar.style.width = pct + "%";
+        if ($handle) $handle.style.left = pct + "%";
       }
     });
-
     video.addEventListener("progress", function () {
       if (
         !$buff ||
@@ -239,22 +205,18 @@
       } catch (e) {}
     });
 
-    // seek click/drag
     if ($track) {
       var dragging = false;
-
       function pctFromEvent(ev) {
         var rect = $track.getBoundingClientRect();
         var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
         return Math.max(0, Math.min(1, x / rect.width));
       }
-
       function seek(ev) {
         if (!isFinite(video.duration) || video.duration <= 0) return;
         var pct = pctFromEvent(ev);
         video.currentTime = pct * video.duration;
       }
-
       $track.addEventListener("mousedown", function (ev) {
         dragging = true;
         root.setAttribute("data-timeline-drag", "true");
@@ -292,7 +254,6 @@
       window.addEventListener("touchcancel", endDrag);
     }
 
-    // hover UI
     root.addEventListener("mouseenter", function () {
       root.setAttribute("data-player-hover", "active");
     });
@@ -300,7 +261,6 @@
       root.setAttribute("data-player-hover", "idle");
     });
 
-    // scorciatoie tastiera
     root.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
@@ -317,16 +277,14 @@
         e.preventDefault();
         toggleFullscreen(root);
       }
-      if (e.key === "ArrowLeft") {
+      if (e.key === "ArrowLeft")
         video.currentTime = Math.max(0, video.currentTime - 5);
-      }
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowRight")
         if (isFinite(video.duration))
           video.currentTime = Math.min(
             video.duration - 0.001,
             video.currentTime + 5
           );
-      }
     });
   }
 
@@ -336,10 +294,8 @@
       .forEach(initBunnyPlayerRoot);
   }
 
-  // Frontend load
   $(initAll);
 
-  // Elementor frontend hook
   $(window).on("elementor/frontend/init", function () {
     elementorFrontend.hooks.addAction(
       "frontend/element_ready/hassel_bunny_hls_player.default",
