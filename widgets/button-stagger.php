@@ -58,10 +58,14 @@ class Button_Stagger extends Widget_Base
             'default' => 'Staggering Button',
         ]);
 
+        // ✅ Link con Dynamic Tags attivi
         $this->add_control('link', [
             'label' => __('Link', 'hassel-components'),
             'type' => Controls_Manager::URL,
+            'dynamic' => ['active' => true], // <-- abilitazione contenuti dinamici
             'default' => ['url' => '#'],
+            'placeholder' => 'https://...',
+            'options' => false,
         ]);
 
         $this->end_controls_section();
@@ -73,16 +77,16 @@ class Button_Stagger extends Widget_Base
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        // TIPOGRAFIA 
+        // TIPOGRAFIA
         $this->add_group_control(Group_Control_Typography::get_type(), [
             'name' => 'typography',
             'selector' => '{{WRAPPER}} .btn-animate-chars__text',
         ]);
 
-        // TABS NORMALE / HOVER 
+        // TABS NORMALE / HOVER
         $this->start_controls_tabs('tabs_button_style');
 
-        // ---- NORMALE ---- 
+        // ---- NORMALE ----
         $this->start_controls_tab('tab_button_normal', [
             'label' => __('Normale', 'hassel-components')
         ]);
@@ -101,7 +105,7 @@ class Button_Stagger extends Widget_Base
 
         $this->end_controls_tab();
 
-        // ---- HOVER ---- 
+        // ---- HOVER ----
         $this->start_controls_tab('tab_button_hover', [
             'label' => __('Hover', 'hassel-components')
         ]);
@@ -118,28 +122,21 @@ class Button_Stagger extends Widget_Base
             'selectors' => ['{{WRAPPER}} .btn-animate-chars:hover .btn-animate-chars__bg' => 'background-color: {{VALUE}};'],
         ]);
 
-        // 🎚️ DURATA ANIMAZIONE HOVER — SLIDER UFFICIALE 
+        // 🎚️ DURATA ANIMAZIONE HOVER — SLIDER UFFICIALE
         $this->add_control('hover_animation_duration', [
             'label' => __('Durata animazione hover (s)', 'hassel-components'),
             'type' => Controls_Manager::SLIDER,
             'range' => [
-                's' => [
-                    'min' => 0.1,
-                    'max' => 5,
-                    'step' => 0.1,
-                ],
+                's' => ['min' => 0.1, 'max' => 5, 'step' => 0.1],
             ],
-            'default' => [
-                'unit' => 's',
-                'size' => 0.6,
-            ],
+            'default' => ['unit' => 's', 'size' => 0.6],
             'selectors' => [
                 '{{WRAPPER}} .btn-animate-chars__bg' => 'transition-duration: {{SIZE}}s;',
                 '{{WRAPPER}} .btn-animate-chars [data-button-animate-chars] span' => 'transition-duration: {{SIZE}}s;',
             ],
         ]);
 
-        // ⚙️ EASING UNICO (ENTRATA + USCITA) 
+        // ⚙️ EASING UNICO (ENTRATA + USCITA)
         $this->add_control('animation_easing', [
             'label' => __('Tipo di animazione', 'hassel-components'),
             'type' => Controls_Manager::SELECT,
@@ -161,42 +158,33 @@ class Button_Stagger extends Widget_Base
         $this->end_controls_tab();
         $this->end_controls_tabs();
 
-        // 🔲 PADDING 
+        // 🔲 PADDING
         $this->add_responsive_control('padding', [
             'label' => __('Padding', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => [
-                'px',
-                'em',
-                'rem',
-                '%'
-            ],
+            'size_units' => ['px', 'em', 'rem', '%'],
             'selectors' => [
                 '{{WRAPPER}} .btn-animate-chars' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);
 
-        // 🟦 BORDO 
+        // 🟦 BORDO
         $this->add_group_control(Group_Control_Border::get_type(), [
             'name' => 'border',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
         ]);
 
-        // 🔵 RAGGIO BORDO 
+        // 🔵 RAGGIO BORDO
         $this->add_responsive_control('border_radius', [
             'label' => __('Raggio bordo', 'hassel-components'),
             'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => [
-                'px',
-                '%',
-                'em'
-            ],
+            'size_units' => ['px', '%', 'em'],
             'selectors' => [
                 '{{WRAPPER}} .btn-animate-chars, {{WRAPPER}} .btn-animate-chars__bg' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
         ]);
 
-        // 🌫️ OMBRA 
+        // 🌫️ OMBRA
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
             'name' => 'box_shadow',
             'selector' => '{{WRAPPER}} .btn-animate-chars__bg',
@@ -204,16 +192,27 @@ class Button_Stagger extends Widget_Base
 
         $this->end_controls_section();
     }
+
     protected function render()
     {
         $s = $this->get_settings_for_display();
-        $link = $s['link']['url'] ?? '#';
-        $target = !empty($s['link']['is_external']) ? ' target="_blank"' : '';
-        $rel = !empty($s['link']['nofollow']) ? ' rel="nofollow"' : '';
 
-        echo '<a href="' . esc_url($link) . '" aria-label="' . esc_attr($s['text']) . '" role="button" class="btn-animate-chars"' . $target . $rel . '>';
-        echo ' <div class="btn-animate-chars__bg"></div>';
-        echo ' <span data-button-animate-chars class="btn-animate-chars__text">' . esc_html($s['text']) . '</span>';
+        // Prepara attributi del link con supporto ai Dynamic Tags
+        $link = $s['link'] ?? [];
+        if (empty($link['url'])) {
+            $link['url'] = '#'; // fallback sicuro
+        }
+
+        // classe e aria-label
+        $this->add_render_attribute('button', 'class', 'btn-animate-chars');
+        $this->add_render_attribute('button', 'aria-label', esc_attr($s['text'] ?? 'Button'));
+
+        // 👉 Aggancio nativo Elementor: href/target/rel/custom attributes + dynamic
+        $this->add_link_attributes('button', $link);
+
+        echo '<a ' . $this->get_render_attribute_string('button') . '>';
+        echo '  <div class="btn-animate-chars__bg"></div>';
+        echo '  <span data-button-animate-chars class="btn-animate-chars__text">' . esc_html($s['text']) . '</span>';
         echo '</a>';
     }
 }
