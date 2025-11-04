@@ -184,8 +184,8 @@
           0,
           Math.min(100, (video.currentTime / video.duration) * 100)
         );
-        if ($bar) $bar.style.width = pct + "%";
-        if ($handle) $handle.style.left = pct + "%";
+        if ($bar) $bar.style.width = pct + "%"; // linea colorata
+        if ($handle) $handle.style.left = pct + "%"; // pallino posizionato
       }
     });
     video.addEventListener("progress", function () {
