@@ -1,3 +1,7 @@
+/* ==========================================================
+   BUNNY HLS PLAYER — CSS COMPLETO AGGIORNATO
+   ========================================================== */
+
 /* Variabili tema */
 .bunny-player {
   --hp-accent: #ff4c24;
@@ -5,7 +9,7 @@
   --hp-overlay: 0.3;
   --hp-play-size: 6em;
   --hp-play-icon: 2em;
-  --hp-aspect: 16 / 9; /* aggiornato via JS con videoWidth/videoHeight */
+  --hp-aspect: 16 / 9;
 }
 
 /* Wrapper */
@@ -15,7 +19,7 @@
   isolation: isolate;
   border-radius: 1em;
   width: 100%;
-  display: block; /* evita collasso */
+  display: block;
   position: relative;
   overflow: hidden;
   transform: translateX(0);
@@ -26,7 +30,7 @@
 .bunny-player__before {
   display: block;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 */
+  padding-top: 56.25%;
   flex: 0 0 auto;
 }
 
@@ -50,7 +54,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  pointer-events: none; /* non bloccare hover */
+  pointer-events: none;
 }
 [data-bunny-player-init][data-player-status="playing"]
   .bunny-player__placeholder,
@@ -198,7 +202,7 @@
   align-items: center;
 }
 
-/* Timeline */
+/* === TIMELINE (corretta e visibile) === */
 .bunny-player__timeline {
   flex: 1;
   height: 1em;
@@ -208,20 +212,19 @@
   cursor: pointer;
   margin-inline: 0.5em;
 }
+
+/* Barra principale */
 .bunny-player__timeline-bar {
   position: absolute;
   inset-inline: 0;
-  height: 30%;
+  height: 6px;
   border-radius: 1em;
-  overflow: hidden;
-}
-.bunny-player__timeline-bg {
-  position: absolute;
-  inset: 0;
+  overflow: visible;
   background: #ffffff26;
-  border-radius: 1em;
   z-index: 0;
 }
+
+/* Buffer */
 .bunny-player__timeline-buffered {
   position: absolute;
   left: 0;
@@ -229,38 +232,46 @@
   bottom: 0;
   background: #fff;
   opacity: 0.2;
-  width: 0; /* via JS */
+  width: 0;
+  border-radius: 1em;
   z-index: 1;
 }
+
+/* Progress (colore avanzamento) */
 .bunny-player__timeline-progress {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  background: var(--hp-accent);
-  width: 0; /* via JS */
-  z-index: 2; /* SOPRA buffered e bg */
+  background: #ba9c73;
+  width: 0;
+  border-radius: 1em;
+  z-index: 2;
   transition: width 0.1s linear;
 }
+
+/* Handle (pallino) */
 .bunny-player__timeline-handle {
   position: absolute;
   top: 50%;
-  left: 0; /* via JS in % */
-  width: 1em;
-  height: 1em;
-  border-radius: 1em;
-  background: var(--hp-accent);
-  transform: translate(-50%, -50%) scale(0.66); /* sempre visibile, più piccolo */
-  opacity: 0.7;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a26941;
+  transform: translate(-50%, -50%) scale(0.9);
+  opacity: 0.9;
   transition:
     transform 0.12s ease-in-out,
     opacity 0.12s ease-in-out;
   pointer-events: none;
   z-index: 3;
 }
+
+/* Handle attivo durante il drag */
 [data-bunny-player-init][data-timeline-drag="true"]
   .bunny-player__timeline-handle {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1.1);
   opacity: 1;
 }
 
@@ -305,14 +316,14 @@
   display: none;
 }
 
-/* Slider volume (thumb usa --hp-accent) */
+/* Slider volume */
 .bunny-player__volume-range {
   width: 80px;
   appearance: none;
   height: 4px;
   background: #ffffff26;
   border-radius: 2px;
-  cursor: pointer; /* manina sul volume */
+  cursor: pointer;
 }
 .bunny-player__volume-range::-webkit-slider-thumb {
   appearance: none;
@@ -340,17 +351,4 @@
     transition: none !important;
     animation: none !important;
   }
-}
-
-.bunny-player__timeline-bar {
-  overflow: visible;
-}
-.bunny-player__timeline-bg {
-  z-index: 0;
-}
-.bunny-player__timeline-buffered {
-  z-index: 1;
-}
-.bunny-player__timeline-progress {
-  z-index: 2;
 }
