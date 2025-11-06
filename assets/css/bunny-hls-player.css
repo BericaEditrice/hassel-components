@@ -350,8 +350,6 @@
   border: none;
   cursor: pointer;
 }
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .bunny-player {
     --hp-overlay: 0.15;
