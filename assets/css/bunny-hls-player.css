@@ -374,3 +374,91 @@
     animation: none !important;
   }
 }
+
+/* --- FIX urgente timeline: niente ::before, colori giusti, layering corretto --- */
+
+/* contenitore */
+.bunny-player__timeline {
+  flex: 1 1 auto;
+  position: relative;
+  height: 18px;
+  line-height: 0;
+  display: block;
+  direction: ltr;
+  cursor: pointer;
+  margin-inline: 0.5em;
+  z-index: 0;
+}
+
+/* barra: sfondo direttamente qui (non su ::before) */
+.bunny-player__timeline-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 6px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--hp-progress-bg) !important; /* ← sfondo */
+  z-index: 0;
+}
+
+/* rimuovi qualsiasi ::before rimasto da cache/override */
+.bunny-player__timeline-bar::before {
+  content: none !important;
+}
+
+/* buffer e progress sopra lo sfondo */
+.bunny-player__timeline-buffered {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: #fff;
+  opacity: 0.2;
+  border-radius: 999px;
+  z-index: 1;
+  pointer-events: none;
+}
+.bunny-player__timeline-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--hp-progress) !important;
+  border-radius: 999px;
+  z-index: 2;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+/* handle centrato */
+.bunny-player__timeline-handle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--hp-handle) !important;
+  transform: translate(-50%, -50%) scale(0.9);
+  opacity: 0.9;
+  z-index: 3;
+  pointer-events: none;
+}
+[data-bunny-player-init][data-timeline-drag="true"]
+  .bunny-player__timeline-handle {
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 1;
+}
+
+/* i blocchi laterali restano sopra la timeline, nessuna sovrapposizione */
+.bunny-player__toggle-playpause,
+.bunny-player__time,
+.bunny-player__interface-btns {
+  position: relative;
+  z-index: 5;
+}
