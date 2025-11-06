@@ -128,7 +128,7 @@ class Bunny_HLS_Player extends Widget_Base
         $this->end_controls_section(); // END content
 
 
-        /* ============= TEMA & TIPOGRAFIA ============= */
+        /* ============= TEMA & CONTROLLI ============= */
         $this->start_controls_section('theme', [
             'label' => __('Tema & Controlli', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -140,7 +140,7 @@ class Bunny_HLS_Player extends Widget_Base
         ]);
 
         $this->add_control('accent', [
-            'label' => __('Colore accento (thumb volume / accent)', 'hassel-components'),
+            'label' => __('Colore accento (progress/handle)', 'hassel-components'),
             'type' => Controls_Manager::COLOR,
             'default' => '#ff4c24',
             'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-accent: {{VALUE}};'],
@@ -178,43 +178,48 @@ class Bunny_HLS_Player extends Widget_Base
         $this->end_controls_section(); // END layout
 
 
-        /* ============= TIMELINE (COLORI) ============= */
-        $this->start_controls_section('timeline_style', [
-            'label' => __('Timeline', 'hassel-components'),
+        /* ============= PULSANTE PLAY ============= */
+        $this->start_controls_section('play_btn', [
+            'label' => __('Pulsante Play/Pause', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
         ]);
 
-        $this->add_control('timeline_bg_color', [
-            'label' => __('Colore sfondo timeline', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'default' => 'rgba(255,255,255,0.15)', // ≈ #ffffff26
-            'selectors' => [
-                '{{WRAPPER}} .bunny-player' => '--hp-progress-bg: {{VALUE}};',
-            ],
+        $this->add_responsive_control('play_size', [
+            'label' => __('Diametro cerchio', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 0, 'max' => 200]],
+            'default' => ['size' => 96, 'unit' => 'px'],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-size: {{SIZE}}{{UNIT}};'],
         ]);
 
-        $this->add_control('timeline_progress_color', [
-            'label' => __('Colore avanzamento', 'hassel-components'),
-            'type' => Controls_Manager::COLOR,
-            'default' => '#ba9c73',
-            'selectors' => [
-                '{{WRAPPER}} .bunny-player' => '--hp-progress: {{VALUE}};',
-            ],
+        $this->add_responsive_control('play_icon', [
+            'label' => __('Dimensione icona', 'hassel-components'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem'],
+            'range' => ['px' => ['min' => 0, 'max' => 120]],
+            'default' => ['size' => 32, 'unit' => 'px'],
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-icon: {{SIZE}}{{UNIT}};'],
         ]);
 
-        $this->add_control('timeline_handle_color', [
-            'label' => __('Colore handle', 'hassel-components'),
+        $this->add_control('play_bg', [
+            'label' => __('Colore cerchio', 'hassel-components'),
             'type' => Controls_Manager::COLOR,
-            'default' => '#A26941',
-            'selectors' => [
-                '{{WRAPPER}} .bunny-player' => '--hp-handle: {{VALUE}};',
-            ],
+            'default' => 'rgba(100,100,100,.2)',
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-bg: {{VALUE}};'],
         ]);
 
-        $this->end_controls_section(); // END timeline_style
+        $this->add_control('play_border', [
+            'label' => __('Bordo cerchio', 'hassel-components'),
+            'type' => Controls_Manager::COLOR,
+            'default' => 'rgba(255,255,255,.1)',
+            'selectors' => ['{{WRAPPER}} .bunny-player' => '--hp-play-border: {{VALUE}};'],
+        ]);
+
+        $this->end_controls_section(); // END play_btn
 
 
-        /* ============= ACCESSIBILITÀ ============= */
+        /* ============= ACCESSIBILITÀ / COMPORTAMENTO ============= */
         $this->start_controls_section('a11y', [
             'label' => __('Accessibilità & Comportamento', 'hassel-components'),
             'tab' => Controls_Manager::TAB_STYLE,
@@ -308,7 +313,7 @@ class Bunny_HLS_Player extends Widget_Base
         echo '    <div class="bunny-player__interface-fade"></div>';
         echo '    <div class="bunny-player__interface-bottom">';
 
-        // play/pause secondario
+        // toggle play/pause secondario (stessi SVG del centrale)
         echo '      <div class="bunny-player__toggle-playpause" data-player-control="playpause" aria-label="' . esc_attr__('Play/Pause', 'hassel-components') . '" role="button" tabindex="0">';
         echo '        <svg class="bunny-player__pause-svg" viewBox="0 0 24 24"><path d="M16 5V19" stroke="currentColor" stroke-width="3"/><path d="M8 5V19" stroke="currentColor" stroke-width="3"/></svg>';
         echo '        <svg class="bunny-player__play-svg" viewBox="0 0 24 24"><path d="M6 12V5.01109C6 4.05131 7.03685 3.4496 7.87017 3.92579L14 7.42855L20.1007 10.9147C20.9405 11.3945 20.9405 12.6054 20.1007 13.0853L14 16.5714L7.87017 20.0742C7.03685 20.5503 6 19.9486 6 18.9889V12Z" fill="currentColor"/></svg>';
@@ -321,9 +326,11 @@ class Bunny_HLS_Player extends Widget_Base
                       </div>';
 
         echo '      <div class="bunny-player__timeline" data-player-timeline>
-                        <div class="bunny-player__timeline-bar"></div>
-                        <div class="bunny-player__timeline-buffered" data-player-buffered></div>
-                        <div class="bunny-player__timeline-progress" data-player-progress></div>
+                        <div class="bunny-player__timeline-bar">
+                          <div class="bunny-player__timeline-bg"></div>
+                          <div class="bunny-player__timeline-buffered" data-player-buffered></div>
+                          <div class="bunny-player__timeline-progress" data-player-progress></div>
+                        </div>
                         <div class="bunny-player__timeline-handle" data-player-timeline-handle></div>
                       </div>';
 

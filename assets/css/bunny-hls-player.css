@@ -1,4 +1,8 @@
-/* ========================================================== BUNNY HLS PLAYER — CSS COMPLETO AGGIORNATO ========================================================== */ /* Variabili tema */
+/* ==========================================================
+   BUNNY HLS PLAYER — CSS COMPLETO AGGIORNATO
+   ========================================================== */
+
+/* Variabili tema */
 .bunny-player {
   --hp-accent: #ff4c24;
   --hp-icon: #fff;
@@ -6,7 +10,9 @@
   --hp-play-size: 6em;
   --hp-play-icon: 2em;
   --hp-aspect: 16 / 9;
-} /* Wrapper */
+}
+
+/* Wrapper */
 .bunny-player {
   pointer-events: auto;
   color: var(--hp-icon);
@@ -18,13 +24,17 @@
   overflow: hidden;
   transform: translateX(0);
   aspect-ratio: var(--hp-aspect);
-} /* Fallback ratio */
+}
+
+/* Fallback ratio */
 .bunny-player__before {
   display: block;
   width: 100%;
   padding-top: 56.25%;
   flex: 0 0 auto;
-} /* Fadeables */
+}
+
+/* Fadeables */
 [data-bunny-player-init]
   :is(
     .bunny-player__placeholder,
@@ -35,7 +45,9 @@
   transition:
     opacity 0.3s linear,
     visibility 0.3s linear;
-} /* Poster */
+}
+
+/* Poster */
 .bunny-player__placeholder {
   position: absolute;
   inset: 0;
@@ -52,7 +64,9 @@
   .bunny-player__placeholder {
   opacity: 0;
   visibility: hidden;
-} /* Dark overlay */
+}
+
+/* Dark overlay */
 .bunny-player__dark {
   position: absolute;
   inset: 0;
@@ -67,14 +81,18 @@
 }
 [data-bunny-player-init][data-player-status="playing"] .bunny-player__dark {
   opacity: 0;
-} /* Video */
+}
+
+/* Video */
 .bunny-player__video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
-} /* Big play centrale */
+}
+
+/* Big play centrale */
 .bunny-player__playpause {
   pointer-events: auto;
   position: absolute;
@@ -95,7 +113,9 @@
   align-items: center;
   justify-content: center;
   padding: calc(var(--hp-play-size) / 3);
-} /* Toggle play/pause */
+}
+
+/* Toggle play/pause */
 .bunny-player__pause-svg,
 .bunny-player__play-svg {
   width: var(--hp-play-icon);
@@ -111,7 +131,9 @@
 }
 [data-player-status="playing"] .bunny-player__pause-svg {
   display: block;
-} /* Interfaccia */
+}
+
+/* Interfaccia */
 .bunny-player__interface {
   position: absolute;
   inset: 0;
@@ -131,6 +153,7 @@
   opacity: 1;
   transform: translateY(0) rotate(0.001deg);
 }
+
 .bunny-player__interface-fade {
   position: absolute;
   left: 0;
@@ -140,6 +163,7 @@
   background-image: linear-gradient(#0000, #000);
   opacity: 0.5;
 }
+
 .bunny-player__interface-bottom {
   pointer-events: auto;
   position: relative;
@@ -150,6 +174,7 @@
   justify-content: space-between;
   gap: 1em;
 }
+
 .bunny-player__toggle-playpause,
 .bunny-player__toggle-mute,
 .bunny-player__toggle-fullscreen {
@@ -157,6 +182,7 @@
   height: 1.5em;
   cursor: pointer;
 }
+
 .bunny-player__text {
   font-size: 0.9375em;
   line-height: 1;
@@ -174,68 +200,99 @@
   display: flex;
   gap: 0.5em;
   align-items: center;
-} /* === TIMELINE (corretta e visibile) === */
+}
+
+/* =========================================================
+   TIMELINE (pulita, centrata e senza bleed a sinistra)
+   ========================================================= */
 .bunny-player__timeline {
-  flex: 1;
-  height: 1em;
-  display: flex;
-  align-items: center;
+  flex: 1 1 auto;
   position: relative;
+  height: 18px;
+  line-height: 0;
+  display: block;
+  direction: ltr;
   cursor: pointer;
   margin-inline: 0.5em;
-} /* Barra principale */
+}
+
+/* barra principale centrata */
 .bunny-player__timeline-bar {
   position: absolute;
-  inset-inline: 0;
+  left: 0;
+  right: 0;
+  top: 50%;
   height: 6px;
-  border-radius: 1em;
+  transform: translateY(-50%);
+  border-radius: 999px;
   overflow: visible;
+}
+
+/* sfondo neutro confinato nello slot timeline */
+.bunny-player__timeline-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: #ffffff26;
-  z-index: 0;
-} /* Buffer */
+  border-radius: 999px;
+}
+
+/* vecchio bg (se presente) spento */
+.bunny-player__timeline-bg {
+  display: none;
+}
+
+/* buffer (JS aggiorna width) */
 .bunny-player__timeline-buffered {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
+  width: 0;
   background: #fff;
   opacity: 0.2;
-  width: 0;
-  border-radius: 1em;
+  border-radius: 999px;
   z-index: 1;
-} /* Progress (colore avanzamento) */
+  pointer-events: none;
+}
+
+/* avanzamento (JS aggiorna width) */
 .bunny-player__timeline-progress {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  background: #ba9c73;
   width: 0;
-  border-radius: 1em;
+  background: #ba9c73; /* colore avanzamento */
+  border-radius: 999px;
   z-index: 2;
+  pointer-events: none;
   transition: width 0.1s linear;
-} /* Handle (pallino) */
+}
+
+/* handle centrato */
 .bunny-player__timeline-handle {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: 0; /* JS imposta in % */
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #a26941;
+  background: #a26941; /* colore pallino */
   transform: translate(-50%, -50%) scale(0.9);
   opacity: 0.9;
-  transition:
-    transform 0.12s ease-in-out,
-    opacity 0.12s ease-in-out;
-  pointer-events: none;
   z-index: 3;
-} /* Handle attivo durante il drag */
+  pointer-events: none;
+}
+
+/* handle durante drag */
 [data-bunny-player-init][data-timeline-drag="true"]
   .bunny-player__timeline-handle {
   transform: translate(-50%, -50%) scale(1.1);
   opacity: 1;
-} /* Loading */
+}
+
+/* Loading */
 .bunny-player__loading {
   position: absolute;
   inset: 0;
@@ -249,7 +306,9 @@
 [data-bunny-player-init][data-player-status="loading"] .bunny-player__loading {
   opacity: 1;
   visibility: visible;
-} /* Icon toggles */
+}
+
+/* Icon toggles */
 .bunny-player__volume-mute-svg {
   display: none;
 }
@@ -261,6 +320,7 @@
   .bunny-player__volume-up-svg {
   display: none;
 }
+
 .bunny-player__fullscreen-shrink-svg {
   display: none;
 }
@@ -271,7 +331,9 @@
 [data-bunny-player-init][data-player-fullscreen="true"]
   .bunny-player__fullscreen-scale-svg {
   display: none;
-} /* Slider volume */
+}
+
+/* Slider volume */
 .bunny-player__volume-range {
   width: 80px;
   appearance: none;
@@ -295,7 +357,9 @@
   background: var(--hp-accent);
   border: none;
   cursor: pointer;
-} /* Reduced motion */
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .bunny-player {
     --hp-overlay: 0.15;
