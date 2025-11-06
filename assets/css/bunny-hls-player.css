@@ -341,3 +341,16 @@
     animation: none !important;
   }
 }
+
+.bunny-player__timeline-bar {
+  overflow: visible;
+}
+.bunny-player__timeline-bg {
+  z-index: 0;
+}
+.bunny-player__timeline-buffered {
+  z-index: 1;
+}
+.bunny-player__timeline-progress {
+  z-index: 2;
+}
