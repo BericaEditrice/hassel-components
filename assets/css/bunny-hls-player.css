@@ -1,5 +1,5 @@
 /* ==========================================================
-   BUNNY HLS PLAYER — CSS COMPLETO AGGIORNATO
+   BUNNY HLS PLAYER — CSS COMPLETO (fix definitivo linea grigia)
    ========================================================== */
 
 /* Variabili tema */
@@ -10,11 +10,6 @@
   --hp-play-size: 6em;
   --hp-play-icon: 2em;
   --hp-aspect: 16 / 9;
-
-  /* === Timeline (personalizzabili da Elementor) === */
-  --hp-progress-bg: rgba(255, 255, 255, 0.15); /* ≈ #ffffff26 */
-  --hp-progress: #ba9c73;
-  --hp-handle: #a26941;
 }
 
 /* Wrapper */
@@ -138,7 +133,7 @@
   display: block;
 }
 
-/* Interfaccia */
+/* Interfaccia (riga controlli) */
 .bunny-player__interface {
   position: absolute;
   inset: 0;
@@ -174,10 +169,21 @@
   position: relative;
   width: 100%;
   padding: min(2em, 4vw);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
   gap: 1em;
+  align-items: center;
+
+  /* stop a qualsiasi linea/bordo “di tema” */
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+.bunny-player__interface-bottom::before,
+.bunny-player__interface-bottom::after {
+  content: none !important;
+  display: none !important;
 }
 
 .bunny-player__toggle-playpause,
@@ -187,7 +193,6 @@
   height: 1.5em;
   cursor: pointer;
 }
-
 .bunny-player__text {
   font-size: 0.9375em;
   line-height: 1;
@@ -207,21 +212,18 @@
   align-items: center;
 }
 
-/* =========================================================
-   TIMELINE
-   ========================================================= */
+/* === TIMELINE (fissata e confinata) =============================== */
 .bunny-player__timeline {
+  grid-column: 3;
   flex: 1 1 auto;
-  position: relative;
   height: 18px;
-  line-height: 0;
   display: block;
-  direction: ltr;
+  position: relative !important; /* <-- containing block definitivo */
   cursor: pointer;
-  margin-inline: 0.5em;
+  overflow: visible;
 }
 
-/* barra principale centrata */
+/* base neutra della barra: SOLO dentro la timeline */
 .bunny-player__timeline-bar {
   position: absolute;
   left: 0;
@@ -230,24 +232,12 @@
   height: 6px;
   transform: translateY(-50%);
   border-radius: 999px;
-  overflow: hidden;
+  overflow: visible;
+  background: #ffffff26;
+  z-index: 0;
 }
 
-/* sfondo neutro confinato nello slot timeline */
-.bunny-player__timeline-bar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--hp-progress-bg);
-  border-radius: 999px;
-}
-
-/* vecchio bg se rimasto nel DOM: spento */
-.bunny-player__timeline-bg {
-  display: none;
-}
-
-/* buffer (JS aggiorna width) */
+/* buffer e progress (aggiornati dal JS con width in %) */
 .bunny-player__timeline-buffered {
   position: absolute;
   left: 0;
@@ -260,37 +250,36 @@
   z-index: 1;
   pointer-events: none;
 }
-
-/* avanzamento (JS aggiorna width) */
 .bunny-player__timeline-progress {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 0;
-  background: var(--hp-progress);
+  background: #ba9c73;
   border-radius: 999px;
   z-index: 2;
   pointer-events: none;
   transition: width 0.1s linear;
 }
 
-/* handle centrato */
+/* handle */
 .bunny-player__timeline-handle {
   position: absolute;
   top: 50%;
-  left: 0; /* JS imposta in % */
+  left: 0;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--hp-handle);
+  background: #a26941;
   transform: translate(-50%, -50%) scale(0.9);
-  opacity: 0.9;
-  z-index: 3;
+  opacity: 0.95;
   pointer-events: none;
+  z-index: 3;
+  transition:
+    transform 0.12s ease-in-out,
+    opacity 0.12s ease-in-out;
 }
-
-/* handle durante drag */
 [data-bunny-player-init][data-timeline-drag="true"]
   .bunny-player__timeline-handle {
   transform: translate(-50%, -50%) scale(1.1);
@@ -373,92 +362,4 @@
     transition: none !important;
     animation: none !important;
   }
-}
-
-/* --- FIX urgente timeline: niente ::before, colori giusti, layering corretto --- */
-
-/* contenitore */
-.bunny-player__timeline {
-  flex: 1 1 auto;
-  position: relative;
-  height: 18px;
-  line-height: 0;
-  display: block;
-  direction: ltr;
-  cursor: pointer;
-  margin-inline: 0.5em;
-  z-index: 0;
-}
-
-/* barra: sfondo direttamente qui (non su ::before) */
-.bunny-player__timeline-bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 6px;
-  transform: translateY(-50%);
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--hp-progress-bg) !important; /* ← sfondo */
-  z-index: 0;
-}
-
-/* rimuovi qualsiasi ::before rimasto da cache/override */
-.bunny-player__timeline-bar::before {
-  content: none !important;
-}
-
-/* buffer e progress sopra lo sfondo */
-.bunny-player__timeline-buffered {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  background: #fff;
-  opacity: 0.2;
-  border-radius: 999px;
-  z-index: 1;
-  pointer-events: none;
-}
-.bunny-player__timeline-progress {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  background: var(--hp-progress) !important;
-  border-radius: 999px;
-  z-index: 2;
-  pointer-events: none;
-  transition: width 0.1s linear;
-}
-
-/* handle centrato */
-.bunny-player__timeline-handle {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--hp-handle) !important;
-  transform: translate(-50%, -50%) scale(0.9);
-  opacity: 0.9;
-  z-index: 3;
-  pointer-events: none;
-}
-[data-bunny-player-init][data-timeline-drag="true"]
-  .bunny-player__timeline-handle {
-  transform: translate(-50%, -50%) scale(1.1);
-  opacity: 1;
-}
-
-/* i blocchi laterali restano sopra la timeline, nessuna sovrapposizione */
-.bunny-player__toggle-playpause,
-.bunny-player__time,
-.bunny-player__interface-btns {
-  position: relative;
-  z-index: 5;
 }
