@@ -3,7 +3,7 @@
  * Plugin Name: Hassel Components for Elementor
  * Plugin URI: https://github.com/BericaEditrice/hassel-components
  * Description: Libreria di componenti Elementor sviluppata da Hassel Omnichannel.
- * Version: 1.3.28
+ * Version: 1.3.29
  * Author: Hassel Omnichannel
  * Author URI: https://hassel.it
  * Requires at least: 6.0
