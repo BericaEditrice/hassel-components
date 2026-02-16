@@ -1,0 +1,9 @@
+<wpml-config>
+  <elementor-widgets>
+    <widget name="hassel_button_stagger">
+      <fields>
+        <field type="LINE">text</field>
+      </fields>
+    </widget>
+  </elementor-widgets>
+</wpml-config>
